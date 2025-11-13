@@ -1,0 +1,85 @@
+@import '/public/const.scss';
+
+.modal-header{
+    border-bottom: none;
+    align-items: flex-start;
+    h1{
+        margin-left: 20%;
+        margin-top: 40px;
+    }
+}
+.modal-content{
+    background-color: #f0f0f0;
+    border-radius: 0;
+    border: none;
+}
+.modal-footer{
+    border-top: none;
+    padding: 30px;
+}
+.btn-secondary{
+    border-radius: 29px;
+    padding: 8px 24px;
+    background-color: transparent;
+    color: black;
+}
+.btn-primary{
+    background-color: transparent;
+    border: 1px solid $olive;
+    border-radius: 29px;
+    padding: 8px 24px;
+    color: black;
+}
+.btn-primary:hover{
+    background-color: $olive;
+    border: 1px solid $olive;
+}
+.btn-primary:active{
+    background-color: $olive !important;
+    border: 1px solid $olive !important;
+}
+.btn-close:focus {
+    outline: 0;
+    box-shadow: none;
+    opacity: 1;
+}
+.modal{
+    form{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background-color: transparent;
+        color: black;
+        padding: 0;
+        padding-top: 20px;
+        gap: 0;
+        .form-form{
+            width: 80%;
+            
+        .conf{
+            font-size: 14px;
+            text-align: center;
+            font-weight: 400;
+            color: rgb(53, 53, 53);
+            a{
+                color: $dark-beige;
+            }
+        }
+        }
+        .group{
+            padding: 5px 0;
+        }
+        label{
+            font-size: 16px;
+        }
+        input{
+            font-size: 16px;
+            color: black;
+        }
+        input:focus ~ label, input:valid ~ label    {
+            top:-20px;
+            font-size:14px;
+            color: #757575;
+          }
+    }
+}
