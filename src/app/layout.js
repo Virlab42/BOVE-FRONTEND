@@ -35,9 +35,9 @@ export default function RootLayout({ children }) {
         <Bootstrap />
         <Header />
         {children}
-        {/* <Footer /> */}
-        <ModalForm />
-        <Confidentiality />{/* 
+        <Footer />
+        {/* <ModalForm /> */}
+        {/* <Confidentiality />
         <YandexMetrika /> */}
       </body>
     </html>

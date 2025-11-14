@@ -1,12 +1,13 @@
 'use client'
 import React, { useState, useEffect, useRef } from 'react';
 import Link from "next/link";
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import Image from 'next/image';
 import OffcanvasHeader from '../OffcanvasHeader/OffcanvasHeader';
 import './Header.scss'
 
 export default function Header() {
+    const pathname = usePathname();
     const openButtonRef = useRef(null);
     const router = useRouter();
 
@@ -52,12 +53,15 @@ export default function Header() {
         };
     }, [lastScrollTop]);
 
+    const isNonHomePage = pathname !== '/';
+    const headerClasses = `all-header animate ${isFixed ? '' : 'translate'} ${isDark || isNonHomePage ? 'dark' : ''}`;
+
     return (
 
         <>
-            <header className={`all-header animate ${isFixed ? '' : 'translate'} ${isDark ? 'dark' : ''}`}>
+            <header className={headerClasses}>
                 <div className='menu'>
-                    <Link href=''>Каталог</Link>
+                    <Link href='/catalog'>Каталог</Link>
                     <Link href=''>О бренде</Link>
                     <Link href=''>Контакты</Link>
                     <Link href=''>Блог стилиста</Link>

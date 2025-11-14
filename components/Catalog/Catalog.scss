@@ -1,0 +1,118 @@
+@import '/public/const.scss';
+
+.catalog {
+  padding: 200px 40px 80px;
+  display: flex;
+  gap: 40px;
+  color: #000;
+
+  &__filter,
+  &__sort {
+    width: 180px;
+
+    ul {
+      list-style: none;
+      padding: 0;
+
+      li {
+        margin-bottom: 8px;
+        cursor: pointer;
+        transition: 0.2s;
+
+        &.active {
+          font-weight: 600;
+        }
+      }
+    }
+  }
+
+  &__content {
+    flex: 1;
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+}
+
+.product-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  &__img {
+    position: relative;
+    overflow: hidden;
+    img {
+      width: 100%;
+      object-fit: cover;
+      display: block;
+      transition: .4s ease;
+      -webkit-transition: .4s ease;
+      -moz-transition: .4s ease;
+      -ms-transition: .4s ease;
+      -o-transition: .4s ease;
+}
+
+    .fav {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: none;
+        cursor: pointer;
+        padding: 0;
+        border: none;
+        height: fit-content;
+        width: fit-content;
+        svg{
+            path{
+                transition: .4s ease;
+                -webkit-transition: .4s ease;
+                -moz-transition: .4s ease;
+                -ms-transition: .4s ease;
+                -o-transition: .4s ease;
+}
+        }
+        &.active{
+            svg{
+                path{
+                    fill: red;
+                }
+            }
+        }
+    }
+  }
+
+  &__title,
+  &__price {
+    font-size: 16px;
+    line-height: 1;
+  }
+  &__title{
+    font-weight: 400;
+  }
+  &__price{
+    font-weight: 500;
+    color: $Vinous;
+  }
+  &:hover{
+    img{
+        scale: 1.05;
+    }
+  }
+}
+.catalog__sort {
+  width: 180px;
+  
+  select {
+    width: 100%;
+    padding: 6px 8px;
+    background: #fff;
+    color: #000;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    font-size: 14px;
+  }
+}

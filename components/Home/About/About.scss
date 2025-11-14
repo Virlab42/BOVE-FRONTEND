@@ -1,0 +1,80 @@
+@import '/public/const.scss';
+
+.about-container{
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    padding-bottom: 80px;
+    background-color: white;
+    width: 100%;
+    img{
+        object-fit: cover;
+        height: 50vh;
+    }
+    .left-container{
+        display: flex;
+        flex: 1;
+        align-items: flex-end;
+        min-width: calc(33.3% - 10px);
+        img{
+            width: 100%;
+        }
+    }
+    .right-container{
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        .image-container{
+            display: flex;
+            flex-direction: row;
+            gap: 20px;
+            img{
+                width: calc(50% - 10px);
+            }
+            .about-cta{
+                display: flex;
+                flex-direction: column;
+                gap: 20px;
+                justify-content: space-between;
+                align-items: end;
+                flex: 1;
+                img{
+                    width: 100%;
+                    height: auto;
+                }
+                a{
+                    font-size: 22px;
+                    font-weight: 500;
+                    display: flex;
+                    gap: 10px;
+                    align-items: center;
+                    color: black;
+                            transition: .4s ease;
+                            -webkit-transition: .4s ease;
+                            -moz-transition: .4s ease;
+                            -ms-transition: .4s ease;
+                            -o-transition: .4s ease;
+                    svg{
+                        width: 40px;
+                        height: auto;
+                        path{
+                            transition: .4s ease;
+                            -webkit-transition: .4s ease;
+                            -moz-transition: .4s ease;
+                            -ms-transition: .4s ease;
+                            -o-transition: .4s ease;
+}
+                    }
+                    &:hover{
+                        color: $Vinous;
+                        svg{
+                            path{
+                                fill: $Vinous;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
