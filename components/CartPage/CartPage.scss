@@ -1,0 +1,110 @@
+@import '/public/const.scss';
+
+.cart-page {
+  padding: 125px 15vw 80px 15vw;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+
+  .cart-items {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    border: 1px solid #d9d9d9;
+    padding: 30px;
+  }
+
+  .cart-promo {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    border: 1px solid #d9d9d9;
+    padding: 30px 80px;
+
+    h2 {
+      font-size: 18px;
+    }
+
+    .promo-row {
+      display: flex;
+      gap: 10px;
+      align-items: flex-end;
+      justify-content: space-between;
+      .promo-container{
+        position: relative;
+        display: flex;
+        width: 50%;
+      }
+
+      input {
+        border: none;
+        border-bottom: 1px solid #ccc;
+        background-color: transparent;
+        color: black;
+        padding: 5px;
+        outline: none;
+        width: 100%;
+      }
+
+      .clear-promo {
+        position: absolute;
+        right: 0;
+        bottom: 5px;
+        color: black;
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 16px;
+      }
+
+      .apply-promo {
+        padding: 10px 40px;
+        border: 1px solid $Vinous;
+        background: $Vinous;
+        cursor: pointer;
+      }
+    }
+  }
+
+  .cart-summary {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    border: 1px solid #d9d9d9;
+    padding: 30px 80px;
+
+    h2 {
+      font-size: 18px;
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    hr {
+      border: none;
+      border-top: 1px solid #d9d9d9;
+      opacity: 1;
+      margin: 10px 0;
+    }
+
+    .summary-total {
+      display: flex;
+      justify-content: space-between;
+      font-weight: bold;
+    }
+
+    .checkout-btn {
+      display: inline-block;
+      padding: 15px;
+      border: 1px solid $Vinous;
+      background-color: $Vinous;
+      color: white;
+      text-decoration: none;
+      text-align: center;
+      margin-top: 10px;
+      cursor: pointer;
+    }
+  }
+}

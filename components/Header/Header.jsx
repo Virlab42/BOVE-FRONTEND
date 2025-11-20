@@ -5,8 +5,11 @@ import { useRouter, usePathname } from 'next/navigation';
 import Image from 'next/image';
 import OffcanvasHeader from '../OffcanvasHeader/OffcanvasHeader';
 import './Header.scss'
+import { useCart } from "@/context/CartContext";
 
 export default function Header() {
+    const { cart } = useCart();
+
     const pathname = usePathname();
     const openButtonRef = useRef(null);
     const router = useRouter();
@@ -60,6 +63,9 @@ export default function Header() {
 
         <>
             <header className={headerClasses}>
+                <button id='btn-menu' className="btn-menu" type="button" onClick={handleOpenOffcanvas}>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-list" viewBox="0 0 16 16"><path fillRule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5"></path></svg>
+                </button>
                 <div className='menu'>
                     <Link href='/catalog'>Каталог</Link>
                     <Link href=''>О бренде</Link>
@@ -92,9 +98,9 @@ export default function Header() {
                                 </clipPath>
                             </defs>
                         </svg>
-                        Избранное
+                        <span>Избранное</span>
                     </Link>
-                    <Link className='header-profile' href=''>
+                    <Link className='header-profile' href='/cart'>
                         <svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <g clipPath="url(#clip0_638_28)">
                                 <path d="M12.5 0.15625C9.39062 0.15625 6.85833 2.53125 6.85833 5.44479V5.59479L6.70729 5.63229H3.58646L0 24.8427H25L21.4135 5.64583H18.1542V5.45833C18.1542 2.53125 15.6229 0.15625 12.5 0.15625ZM8.04896 5.48333C8.04896 3.18125 10.0427 1.34375 12.5 1.34375C14.9573 1.34375 16.951 3.18333 16.951 5.45833V5.60833L16.8 5.64583H8.05V5.49583L8.04896 5.48333ZM20.424 6.82083L23.5708 23.6458H1.42917L4.57604 6.83333H6.85833V9.69375H8.04896V6.83333H16.9635V9.69479H18.1542V6.83333H20.4354L20.424 6.82083Z" fill="white" />
@@ -105,12 +111,10 @@ export default function Header() {
                                 </clipPath>
                             </defs>
                         </svg>
-                        Корзина
+                        {cart.length > 0 && <div className="badge">{cart.length}</div>}
+                        <span>Корзина</span>
                     </Link>
                 </div>
-                <button id='btn-menu' className="btn-menu" type="button" onClick={handleOpenOffcanvas}>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-list" viewBox="0 0 16 16"><path fillRule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5"></path></svg>
-                </button>
             </header>
             <OffcanvasHeader />
         </>

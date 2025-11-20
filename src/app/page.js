@@ -6,15 +6,15 @@ import About from "../../components/Home/About/About";
 
 
 export const metadata = {
-  title: "",
-  description: "",
+  title: "BOVE",
+  description: "Одежда для тех, кто превращает мгновения в события",
   alternates: {
     canonical: 'https://'
   },
   keywords: [],
     openGraph: {
-      title: "",
-      description: "",
+      title: "BOVE",
+      description: "Одежда для тех, кто превращает мгновения в события",
       url: `https://`,
       images: [
           {

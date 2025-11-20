@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 export function useCart() {
   const [cart, setCart] = useState([]);
 
-  // Загружаем корзину при монтировании
+  // Загружаем корзину из localStorage
   useEffect(() => {
     const saved = localStorage.getItem('cart');
     if (saved) {
@@ -17,25 +17,23 @@ export function useCart() {
     }
   }, []);
 
+  // Сохраняем корзину при любом изменении
+  useEffect(() => {
+    localStorage.setItem('cart', JSON.stringify(cart));
+  }, [cart]);
+
   // Добавить товар
-  const add = (id) => {
-    const updated = [...cart, id];
-    setCart(updated);
-    localStorage.setItem('cart', JSON.stringify(updated));
+  const add = (item) => {
+    setCart((prev) => [...prev, item]);
   };
 
   // Удалить товар
-  const remove = (id) => {
-    const updated = cart.filter((item) => item !== id);
-    setCart(updated);
-    localStorage.setItem('cart', JSON.stringify(updated));
+  const remove = (index) => {
+    setCart((prev) => prev.filter((_, i) => i !== index));
   };
 
-  // Очистить корзину
-  const clear = () => {
-    setCart([]);
-    localStorage.removeItem('cart');
-  };
+  // Очистить
+  const clear = () => setCart([]);
 
   return { cart, add, remove, clear };
 }

@@ -6,6 +6,7 @@ import Bootstrap from "../../components/Bootstrap/Bootstrap";
 import ModalForm from "../../components/ModalForm/ModalForm";
 import Confidentiality from "../../components/Confidentiality/confidentiality";
 import YandexMetrika from "../../components/YandexMetrika/YandexMEtrika";
+import { CartProvider } from '@/context/CartContext';
 
 export const metadata = {
   icons: {
@@ -33,8 +34,10 @@ export default function RootLayout({ children }) {
     <html lang="ru">
       <body>
         <Bootstrap />
+        <CartProvider>
         <Header />
-        {children}
+          {children}
+        </CartProvider>
         <Footer />
         {/* <ModalForm /> */}
         {/* <Confidentiality />

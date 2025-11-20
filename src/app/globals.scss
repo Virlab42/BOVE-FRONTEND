@@ -28,6 +28,10 @@ a {
 section{
   padding-left: 40px;
   padding-right: 40px;
+  @media screen and (max-width: 700px){
+    padding-left: 2vw;
+    padding-right: 2vw;
+  }
 }
 
 @media (prefers-color-scheme: dark) {

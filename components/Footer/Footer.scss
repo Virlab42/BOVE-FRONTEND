@@ -50,6 +50,10 @@ footer {
                     justify-content: center;
                     gap: 20px;
                     font-size: 14px;
+                    p{
+                        font-weight: 500;
+                        margin-bottom: 0;
+                    }
                     span{
                         color: white;
                         margin-right: 20px;
@@ -211,8 +215,38 @@ footer {
     }
 }
 
-@media (max-width: 992px) {
+@media (max-width: 700px) {
     footer {
+        .content-block{
+            padding: 20px 10px;
+            img{
+                margin: 0 0 20px;
+            }
+            .footer-container{
+                .nav-container{
+                    gap: 30px;
+                    .nav-block{
+                        flex-direction: column;
+                        align-items: center;
+                        gap: 20px;
+                    }
+                    .politics{
+                        flex-direction: column;
+                        align-items: center;
+                        gap: 10px;
+                        .confidentiality-footer{
+                            align-self: center;
+                        }
+                        span{
+                            margin: 0;
+                        }
+                    }
+                    .nav-contacts{
+                        align-items: center;
+                    }
+                }
+            }
+        }
         .confidentiality-footer{
             align-self: flex-end;
         }
@@ -230,9 +264,6 @@ footer {
             }
         }
 
-        .content-block {
-            display: none;
-        }
 
         .footer-container {
             display: flex;
@@ -243,110 +274,6 @@ footer {
                 font-size: 14px;
                 color: #dbdbdb;
             }
-        }
-
-        .content-block-mob {
-            display: flex;
-            flex-direction: column;
-            padding: 40px 10%;
-            justify-content: space-between;
-
-            img {
-                border-bottom: 1px solid #dbdbdb;
-            }
-
-            .nav-block {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                column-gap: 20px;
-                row-gap: 10px;
-                padding-bottom: 25px;
-                margin-bottom: 25px;
-
-                .logo {
-                    display: flex;
-                    flex-direction: row;
-                    align-items: center;
-                    gap: 10px;
-
-                    .logo-header {
-                        height: 80px;
-                    }
-
-                    .logo-text {
-                        display: flex;
-                        flex-direction: column;
-                        color: #dbdbdb;
-                        line-height: 160%;
-
-                        span {
-                            font-size: 20px;
-                            font-weight: 300;
-                        }
-
-                        strong {
-                            font-size: 32px;
-                            font-weight: 800;
-                        }
-                    }
-                }
-            }
-
-            .nav-block-connection {
-                flex-direction: column;
-                align-items: end;
-                gap: 20px;
-                .connection-icon{
-                    display: flex;
-                    flex-direction: row;
-                    gap: 20px;
-                }
-            }
-
-            .footer-logo {
-                border-bottom: 1px solid #dbdbdb;
-            }
-
-            .menu {
-                margin-bottom: 0;
-                align-items: end;
-                text-transform: uppercase;
-                gap: 30px;
-            }
-        }
-
-        button.collapsed {
-            svg {
-                transform: rotate(0deg);
-            }
-        }
-
-        button {
-            background: none;
-            border: none;
-            width: 100%;
-            color: black;
-            font-weight: 400;
-            margin-bottom: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-
-            svg {
-                transition: .3s;
-                transform: rotate(90deg);
-            }
-        }
-
-        .card {
-            background: transparent;
-            border: none;
-            padding-top: 0;
-        }
-
-        ul {
-            margin-bottom: 0;
         }
     }
 }

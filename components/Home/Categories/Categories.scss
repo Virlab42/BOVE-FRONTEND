@@ -89,3 +89,20 @@
         }
     }
 }
+@media screen and (max-width: 700px){
+    .categories-container{
+        padding-top: 20px;
+        padding-bottom: 40px;
+        .categories-card-container{
+            gap: 2vw;
+            flex-wrap: wrap;
+            .categories-card{
+                min-width: calc(50% - 1vh);
+                height: 40vh;
+                p{
+                    font-size: 12px;
+                }
+            }
+        }
+    }
+}

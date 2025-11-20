@@ -1,7 +1,7 @@
 @import '/public/const.scss';
 
 .catalog {
-  padding: 200px 40px 80px;
+  padding: 125px 40px 80px;
   display: flex;
   gap: 40px;
   color: #000;
@@ -9,18 +9,43 @@
   &__filter,
   &__sort {
     width: 180px;
+    &__mob{
+      display: none;
+    }
 
     ul {
       list-style: none;
       padding: 0;
 
       li {
+        position: relative;
         margin-bottom: 8px;
         cursor: pointer;
         transition: 0.2s;
-
+        width: fit-content;
+        font-weight: 400;
+        &::after{
+          content: '';
+          position: absolute;
+          background-color: black;
+          bottom: 0;
+          left: 0;
+          height: 1px;
+          width: 0;
+          transition: .4s ease;
+          -webkit-transition: .4s ease;
+          -moz-transition: .4s ease;
+          -ms-transition: .4s ease;
+          -o-transition: .4s ease;
+        }
+        &:hover::after{
+          width: 100%;
+        }
         &.active {
-          font-weight: 600;
+          font-weight: 550;
+        }
+        &.active::after {
+          width: 100%;
         }
       }
     }
@@ -115,4 +140,84 @@
     cursor: pointer;
     font-size: 14px;
   }
+}
+@media (max-width: 700px){
+  .product-card{
+    gap: 1vw;
+    &__title,
+  &__price {
+    font-size: 14px;
+    line-height: 1;
+  }
+  }
+.catalog {
+  padding: 80px 3vw 80px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  color: #000;
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 3vw;
+  }
+  &__filter,
+  &__sort {
+    width: 180px;
+    display: none;
+    &__mob{
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      select {
+      width: fit-content;
+      height: fit-content;
+      //padding: 6px 8px;
+      background: #fff;
+      color: #000;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+      margin-bottom: 0;
+      li {
+        position: relative;
+        margin-bottom: 8px;
+        cursor: pointer;
+        transition: 0.2s;
+        width: fit-content;
+        font-weight: 400;
+        font-size: 14px;
+        &::after{
+          content: '';
+          position: absolute;
+          background-color: black;
+          bottom: 0;
+          left: 0;
+          height: 1px;
+          width: 0;
+          transition: .4s ease;
+          -webkit-transition: .4s ease;
+          -moz-transition: .4s ease;
+          -ms-transition: .4s ease;
+          -o-transition: .4s ease;
+        }
+        &:hover::after{
+          width: 100%;
+        }
+        &.active {
+          font-weight: 550;
+        }
+        &.active::after {
+          width: 100%;
+        }
+      }
+    }
+    }
+  }
+}
 }

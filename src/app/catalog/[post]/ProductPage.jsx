@@ -14,6 +14,7 @@ export default function ProductPage({ product }) {
   const [galleryIndex, setGalleryIndex] = useState(0);
   const [sizeGuideOpen, setSizeGuideOpen] = useState(false);
 
+
   // временные фото
   //const images = ['/img/p1.jpg','/img/p2.jpg','/img/p3.jpg','/img/p4.jpg'];
 
@@ -26,7 +27,7 @@ export default function ProductPage({ product }) {
       />
 
       <ProductInfo
-        id={id}
+        product={product}
         onOpenSizeGuide={() => setSizeGuideOpen(true)}
       />
 

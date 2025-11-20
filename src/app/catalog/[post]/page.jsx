@@ -8,7 +8,7 @@ export async function generateMetadata({ params }) {
     id,
     title: 'Жилетка черная One Size',
     description: 'Классический мужской костюм прямого кроя.',
-    images: ['/Home/Categories/Жилетки.jpg','/Home/Categories/Жилетки.jpg','/Home/Categories/Жилетки.jpg','/Home/Categories/Жилетки.jpg','/Home/Categories/Жилетки.jpg'],
+    images: ['/Home/Categories/Жилетки.jpg','/Home/Categories/Костюмы.jpg','/Home/Categories/Жилетки.jpg','/Home/Categories/Жилетки.jpg','/Home/Categories/Жилетки.jpg'],
     price: 12990
   };
 
@@ -18,7 +18,7 @@ export async function generateMetadata({ params }) {
     openGraph: {
       title: product.title,
       description: product.description,
-      images: product.images
+      images: product.images[1]
     }
   };
 }
@@ -28,7 +28,9 @@ export default function Page({ params }) {
     id: params.id,
     title: 'Жилетка черная One Size',
     description: 'Классическая жилетка прямого кроя.',
-    images: ['/Home/Categories/Жилетки.jpg'],
+    images: ['/Home/Categories/Жилетки.jpg','/Home/Categories/Костюмы.jpg','/Home/Categories/Верхняя.jpg','/Home/Categories/Рубашки.jpg','/Home/Categories/Жилетки.jpg'],
+    colors: ["#ffffff", "#000000", "#999999"],
+    sizes: ["S", "M", "L", "XL"],
     price: 12990
   };
   return <ProductPage product={product} />;

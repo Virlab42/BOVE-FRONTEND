@@ -43,6 +43,27 @@ export default function Catalog() {
     return (
         <div className="catalog">
             {/* Левый фильтр */}
+            <div className="catalog__filter__mob">
+                <ul>
+                    {categories.map((c) => (
+                        <li
+                            key={c}
+                            className={c === selectedCat ? 'active' : ''}
+                            onClick={() => setSelectedCat(c === selectedCat ? null : c)}
+                        >
+                            {c}
+                        </li>
+                    ))}
+                </ul>
+                <select
+                    value={sortType}
+                    onChange={(e) => setSortType(e.target.value)}
+                >
+                    <option value="new">Сначала новинки</option>
+                    <option value="cheap">Сначала недорогие</option>
+                    <option value="expensive">Сначала дорогие</option>
+                </select>
+                </div>
             <aside className="catalog__filter">
                 <ul>
                     {categories.map((c) => (
