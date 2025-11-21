@@ -1,29 +1,30 @@
-'use client';
-import './product.scss';
+"use client";
+import "./product.scss";
 
-import { useState } from 'react';
+import { useState } from "react";
 
-import Gallery from './components/Gallery';
-import GalleryModal from './components/GalleryModal';
-import SizeGuideModal from './components/SizeGuideModal';
-import ProductInfo from './components/ProductInfo';
+import Gallery from "./components/Gallery";
+import GalleryModal from "./components/GalleryModal";
+import SizeGuideModal from "./components/SizeGuideModal";
+import ProductInfo from "./components/ProductInfo";
 
 export default function ProductPage({ product }) {
-    const { id, title, price, description, images } = product;
+  const { id, title, price, description, images } = product;
   const [galleryOpen, setGalleryOpen] = useState(false);
   const [galleryIndex, setGalleryIndex] = useState(0);
   const [sizeGuideOpen, setSizeGuideOpen] = useState(false);
-
 
   // временные фото
   //const images = ['/img/p1.jpg','/img/p2.jpg','/img/p3.jpg','/img/p4.jpg'];
 
   return (
     <div className="product-page">
-
       <Gallery
         images={images}
-        onOpen={(i) => { setGalleryIndex(i); setGalleryOpen(true); }}
+        onOpen={(i) => {
+          setGalleryIndex(i);
+          setGalleryOpen(true);
+        }}
       />
 
       <ProductInfo
@@ -43,7 +44,6 @@ export default function ProductPage({ product }) {
       {sizeGuideOpen && (
         <SizeGuideModal onClose={() => setSizeGuideOpen(false)} />
       )}
-
     </div>
   );
 }
