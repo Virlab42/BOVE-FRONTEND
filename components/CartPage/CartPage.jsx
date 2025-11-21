@@ -1,13 +1,13 @@
-'use client';
-import { useState } from 'react';
-import Link from 'next/link';
-import { useCart } from '@/context/CartContext';
-import './CartPage.scss';
-import CartItem from './CartItem';
+"use client";
+import { useState } from "react";
+import Link from "next/link";
+import { useCart } from "@/context/CartContext";
+import "./CartPage.scss";
+import CartItem from "./CartItem";
 
 export default function CartPage() {
   const { cart, remove, updateQuantity } = useCart();
-  const [promo, setPromo] = useState('');
+  const [promo, setPromo] = useState("");
 
   // Считаем общую сумму
   const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
@@ -20,7 +20,9 @@ export default function CartPage() {
         {cart.length === 0 ? (
           <p>Корзина пуста</p>
         ) : (
-          cart.map((item, index) => <CartItem key={index} item={item} index={index} />)
+          cart.map((item, index) => (
+            <CartItem key={index} item={item} index={index} />
+          ))
         )}
       </div>
 
@@ -29,14 +31,18 @@ export default function CartPage() {
         <h2>Бонусы и скидки</h2>
         <div className="promo-row">
           <label>Промокод:</label>
-          <div className='promo-container'>
-          <input 
-            type="text" 
-            value={promo} 
-            onChange={e => setPromo(e.target.value)} 
-            placeholder="Введите промокод"
-          />
-          {promo && <button className="clear-promo" onClick={() => setPromo('')}>✕</button>}
+          <div className="promo-container">
+            <input
+              type="text"
+              value={promo}
+              onChange={(e) => setPromo(e.target.value)}
+              placeholder="Введите промокод"
+            />
+            {promo && (
+              <button className="clear-promo" onClick={() => setPromo("")}>
+                ✕
+              </button>
+            )}
           </div>
           <button className="apply-promo">Применить промокод</button>
         </div>
@@ -58,7 +64,9 @@ export default function CartPage() {
           <span>Итого:</span>
           <span>{total} ₽</span>
         </div>
-        <Link href="/checkout" className="checkout-btn">Выбрать способ получения</Link>
+        <Link href="/checkout" className="checkout-btn">
+          Выбрать способ получения
+        </Link>
       </div>
     </div>
   );

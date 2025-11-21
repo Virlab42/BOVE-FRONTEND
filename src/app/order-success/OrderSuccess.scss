@@ -1,0 +1,321 @@
+@import "/public/const.scss";
+
+.order-success {
+  padding: 140px 10vw 80px 10vw;
+  min-height: 100vh;
+  background: #f8f9fa;
+
+  .container {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .error-message {
+    text-align: center;
+    padding: 60px 20px;
+
+    h1 {
+      color: #dc3545;
+      margin-bottom: 20px;
+    }
+
+    .back-to-home {
+      display: inline-block;
+      padding: 12px 30px;
+      background: $Vinous;
+      color: white;
+      text-decoration: none;
+      border-radius: 0px;
+      margin-top: 20px;
+    }
+  }
+}
+
+.success-header {
+  text-align: center;
+  margin-bottom: 50px;
+  padding: 40px 20px;
+  background: white;
+  border-radius: 0px;
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+
+  h1 {
+    font-size: 32px;
+    color: #000000;
+    margin-bottom: 15px;
+  }
+
+  .success-message {
+    font-size: 18px;
+    color: #666;
+    line-height: 1.5;
+  }
+}
+
+.order-info {
+  background: white;
+  border-radius: 0px;
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+  margin-bottom: 30px;
+  overflow: hidden;
+}
+
+.info-section {
+  padding: 30px;
+  border-bottom: 1px solid #e9ecef;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  h2 {
+    font-size: 20px;
+    color: $Vinous;
+    margin-bottom: 20px;
+    font-weight: 600;
+  }
+}
+
+.info-grid {
+  display: grid;
+  gap: 15px;
+}
+
+.info-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+
+  .label {
+    color: #666;
+    font-weight: 500;
+  }
+
+  .value {
+    font-weight: 600;
+    text-align: right;
+
+    &.status-processing {
+      color: #ffc107;
+      font-weight: 600;
+    }
+  }
+}
+
+.order-items {
+  margin-bottom: 20px;
+}
+
+.order-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 0;
+  border-bottom: 1px solid #f8f9fa;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  .item-info {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+
+    .item-name {
+      font-weight: 500;
+    }
+
+    .item-quantity {
+      font-size: 14px;
+      color: #666;
+    }
+  }
+
+  .item-price {
+    font-weight: 600;
+  }
+}
+
+.order-total {
+  border-top: 2px solid #e9ecef;
+  padding-top: 20px;
+  margin-top: 20px;
+
+  .total-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 18px;
+    font-weight: 700;
+
+    .total-amount {
+      color: $Vinous;
+      font-size: 24px;
+    }
+  }
+}
+
+.action-buttons {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  margin-bottom: 40px;
+  flex-wrap: wrap;
+
+  .btn {
+    padding: 15px 30px;
+    border-radius: 0px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+
+    &.btn-primary {
+      background: $Vinous;
+      color: white;
+
+      &:hover {
+        background: darken($Vinous, 10%);
+        transform: translateY(-2px);
+      }
+    }
+
+    &.btn-secondary {
+      background: white;
+      color: $Vinous;
+      border: 2px solid $Vinous;
+
+      &:hover {
+        background: $Vinous;
+        color: white;
+        transform: translateY(-2px);
+      }
+    }
+  }
+}
+
+.additional-info {
+  .info-card {
+    background: white;
+    padding: 30px;
+    border-radius: 0px;
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+
+    h3 {
+      color: $Vinous;
+      margin-bottom: 15px;
+      font-size: 18px;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+
+      li {
+        padding: 8px 0;
+        padding-left: 25px;
+        position: relative;
+
+        &:before {
+          content: "•";
+          color: $Vinous;
+          font-weight: bold;
+          position: absolute;
+          left: 10px;
+        }
+      }
+    }
+  }
+}
+
+// Адаптивность
+@media (max-width: 768px) {
+  .order-success {
+    padding: 120px 20px 40px 20px;
+  }
+
+  .success-header {
+    padding: 30px 15px;
+
+    h1 {
+      font-size: 24px;
+    }
+
+    .success-icon {
+      width: 60px;
+      height: 60px;
+      font-size: 30px;
+    }
+  }
+
+  .info-section {
+    padding: 20px;
+
+    h2 {
+      font-size: 18px;
+    }
+  }
+
+  .info-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+
+    .value {
+      text-align: left;
+    }
+  }
+
+  .action-buttons {
+    flex-direction: column;
+
+    .btn {
+      text-align: center;
+    }
+  }
+
+  .order-total .total-row {
+    font-size: 16px;
+
+    .total-amount {
+      font-size: 20px;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .success-header h1 {
+    font-size: 20px;
+  }
+
+  .info-section {
+    padding: 15px;
+  }
+}
+
+// Стили для печати
+@media print {
+  .order-success {
+    padding: 0;
+    background: white;
+  }
+
+  .action-buttons,
+  .additional-info {
+    display: none;
+  }
+
+  .success-header {
+    box-shadow: none;
+    border: 2px solid #28a745;
+  }
+
+  .order-info {
+    box-shadow: none;
+    border: 1px solid #ddd;
+  }
+}
