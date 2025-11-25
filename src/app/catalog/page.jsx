@@ -22,10 +22,11 @@ export const metadata = {
   },
 };
 
-export default function Catalog() {
+export default function Catalog({ searchParams }) {
+  const catFromUrl = searchParams.cat ? Number(searchParams.cat) : null;
   return (
     <>
-      <CatalogClient />
+      <CatalogClient initialCat={catFromUrl} />
     </>
   );
 }

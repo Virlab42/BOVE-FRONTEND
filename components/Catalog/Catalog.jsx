@@ -5,15 +5,6 @@ import { useState, useEffect } from "react";
 import { useCategories } from "@/hooks/useCategories"
 import { useSearchParams } from "next/navigation";
 
-const categories = [
-  { id: 1, name: "Жилетки" },
-  { id: 2, name: "Брюки" },
-  { id: 3, name: "Пиджаки" },
-  { id: 4, name: "Пальто" },
-  { id: 5, name: "Рубашки" },
-];
-
-
 function buildProductUrl(productName, colorName, id) {
   const translitMap = {
     а: "a", б: "b", в: "v", г: "g", д: "d",
@@ -45,8 +36,8 @@ function buildProductUrl(productName, colorName, id) {
   return `${productSlug}-${colorSlug}-${id}`;
 }
 
-export default function Catalog() {
-  const [selectedCat, setSelectedCat] = useState(null);
+export default function Catalog({ initialCat }) {
+  const [selectedCat, setSelectedCat] = useState(initialCat);
   const [sortType, setSortType] = useState("new");
   const [favorites, setFavorites] = useState([]);
   const [products, setProducts] = useState([]);
@@ -133,14 +124,7 @@ export default function Catalog() {
       images: v.images,
     }))
   );
-const searchParams = useSearchParams();
-const catFromUrl = searchParams.get("cat");
 
-useEffect(() => {
-  if (catFromUrl) {
-    setSelectedCat(Number(catFromUrl));
-  }
-}, [catFromUrl]);
   const getProductImage = (product) => {
     if (product.images?.length) return "http://5.129.246.215:8000/" + product.images[0];
     return "/placeholder.jpg";
