@@ -14,12 +14,12 @@ export default function CartItem({ item, index }) {
   const handleIncrement = () => {
     updateQuantity(index, item.quantity + 1);
   };
-
+console.log(`http://5.129.246.215:8000/${item.image}`);
   return (
     <div className="cart-item">
-      <Link href={`/product/${item.id}`} className="cart-item__image-link">
+      <Link href={`${item.url}`} className="cart-item__image-link">
         <Image
-          src="/Home/Categories/Жилетки.jpg"
+          src={`${item.image}`}
           width={500}
           height={500}
           alt={item.title}
@@ -28,7 +28,7 @@ export default function CartItem({ item, index }) {
       </Link>
 
       <div className="cart-item__info">
-        <Link href={`/product/${item.id}`} className="cart-item__title">
+        <Link href={`${item.url}`} className="cart-item__title">
           {item.title}
         </Link>
         <span className="cart-item__options">

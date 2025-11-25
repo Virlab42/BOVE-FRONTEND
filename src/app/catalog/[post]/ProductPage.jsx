@@ -1,24 +1,38 @@
 "use client";
 import "./product.scss";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 
 import Gallery from "./components/Gallery";
 import GalleryModal from "./components/GalleryModal";
 import SizeGuideModal from "./components/SizeGuideModal";
 import ProductInfo from "./components/ProductInfo";
 
-export default function ProductPage({ product }) {
-  const { id, title, price, description, images } = product;
+const BASE_URL = "http://5.129.246.215:8000";
+
+export default function ProductPage({ product, selectedVariantId }) {
+  // ---- Выбираем вариант ----
+  const initialVariant =
+    product.variants.find((v) => v.id === selectedVariantId) ||
+    product.variants[0];
+
+  const [activeVariant, setActiveVariant] = useState(initialVariant);
+
+  // ---- Готовим изображения ----
+  const images = useMemo(() => {
+    if (!activeVariant?.image) return [];
+    return activeVariant.image.split(",").map((img) => `${BASE_URL}/${img}`);
+  }, [activeVariant]);
+
+  // ---- Модалки ----
   const [galleryOpen, setGalleryOpen] = useState(false);
   const [galleryIndex, setGalleryIndex] = useState(0);
   const [sizeGuideOpen, setSizeGuideOpen] = useState(false);
 
-  // временные фото
-  //const images = ['/img/p1.jpg','/img/p2.jpg','/img/p3.jpg','/img/p4.jpg'];
-
   return (
     <div className="product-page">
+
+      {/* ГАЛЕРЕЯ */}
       <Gallery
         images={images}
         onOpen={(i) => {
@@ -27,11 +41,15 @@ export default function ProductPage({ product }) {
         }}
       />
 
+      {/* ИНФО О ТОВАРЕ */}
       <ProductInfo
         product={product}
+        activeVariant={activeVariant}
+        setActiveVariant={setActiveVariant}
         onOpenSizeGuide={() => setSizeGuideOpen(true)}
       />
 
+      {/* МОДАЛЬНАЯ ГАЛЕРЕЯ */}
       {galleryOpen && (
         <GalleryModal
           images={images}
@@ -41,8 +59,12 @@ export default function ProductPage({ product }) {
         />
       )}
 
+      {/* МОДАЛКА С РАЗМЕРАМИ */}
       {sizeGuideOpen && (
-        <SizeGuideModal onClose={() => setSizeGuideOpen(false)} />
+        <SizeGuideModal
+          image={product.image_size} // ← вот так передаём
+          onClose={() => setSizeGuideOpen(false)}
+        />
       )}
     </div>
   );

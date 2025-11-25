@@ -27,24 +27,26 @@ export function CartProvider({ children }) {
 
   // Добавить товар
   const add = (item) => {
-    setCart((prev) => {
-      // Проверяем, есть ли уже такой товар с такими же опциями
-      const existingIndex = prev.findIndex(
-        (i) =>
-          i.id === item.id &&
-          i.color === item.color &&
-          i.size === item.size
-      );
-      if (existingIndex >= 0) {
-        // Если есть, увеличиваем quantity
-        const updated = [...prev];
-        updated[existingIndex].quantity += 1;
-        return updated;
-      } else {
-        return [...prev, { ...item, quantity: 1 }];
-      }
-    });
-  };
+  setCart((prev) => {
+    const existingIndex = prev.findIndex(
+      (i) =>
+        i.id === item.id &&
+        i.variant_id === item.variant_id && // идентификатор варианта
+        i.size === item.size                // выбранный размер
+    );
+
+    if (existingIndex >= 0) {
+      // товар уже в корзине → увеличиваем
+      const updated = [...prev];
+      updated[existingIndex].quantity += 1;
+      return updated;
+    }
+
+    // нового варианта в корзине нет → добавляем
+    return [...prev, { ...item, quantity: 1 }];
+  });
+};
+
 
   // Удалить товар по индексу
   const remove = (index) => {

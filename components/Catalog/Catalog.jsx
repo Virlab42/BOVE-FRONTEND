@@ -2,6 +2,8 @@
 import Link from "next/link";
 import "./Catalog.scss";
 import { useState, useEffect } from "react";
+import { useCategories } from "@/hooks/useCategories"
+import { useSearchParams } from "next/navigation";
 
 const categories = [
   { id: 1, name: "Жилетки" },
@@ -11,6 +13,38 @@ const categories = [
   { id: 5, name: "Рубашки" },
 ];
 
+
+function buildProductUrl(productName, colorName, id) {
+  const translitMap = {
+    а: "a", б: "b", в: "v", г: "g", д: "d",
+    е: "e", ё: "e", ж: "zh", з: "z", и: "i",
+    й: "i", к: "k", л: "l", м: "m", н: "n",
+    о: "o", п: "p", р: "r", с: "s", т: "t",
+    у: "u", ф: "f", х: "h", ц: "c", ч: "ch",
+    ш: "sh", щ: "sch", ъ: "", ы: "y", ь: "",
+    э: "e", ю: "yu", я: "ya"
+  };
+
+  const translit = (str) =>
+    str
+      .toLowerCase()
+      .split("")
+      .map((char) => translitMap[char] ?? char)
+      .join("");
+
+  const slugify = (str) =>
+    translit(str)
+      .replace(/[^a-z0-9\s-]/g, "")   // убрать мусор
+      .trim()
+      .replace(/\s+/g, "-")           // пробелы → "-"
+      .replace(/-+/g, "-");           // убрать двойные дефисы
+
+  const productSlug = slugify(productName);
+  const colorSlug = slugify(colorName);
+
+  return `${productSlug}-${colorSlug}-${id}`;
+}
+
 export default function Catalog() {
   const [selectedCat, setSelectedCat] = useState(null);
   const [sortType, setSortType] = useState("new");
@@ -19,21 +53,52 @@ export default function Catalog() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const { data } = useCategories()
+
+  // === НОРМАЛИЗАЦИЯ ВАРИАНТОВ ===============================================
+  const normalizeVariantImages = (variant) => {
+    if (!variant.image) return [];
+
+    if (Array.isArray(variant.image)) return variant.image;
+
+    if (typeof variant.image === "string") {
+      return variant.image
+        .split(",")
+        .map((img) => img.trim())
+        .filter(Boolean);
+    }
+
+    return [];
+  };
+
+  const normalizeProduct = (p) => ({
+    ...p,
+    available_sizes:
+      typeof p.available_sizes_id === "string"
+        ? JSON.parse(p.available_sizes_id)
+        : [],
+
+    variants: (p.variants || []).map((v) => ({
+      ...v,
+      images: normalizeVariantImages(v),
+    })),
+  });
+
+  // === ЗАГРУЗКА ТОВАРОВ ======================================================
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         setLoading(true);
-        const response = await fetch("http://5.129.246.215:8000/products");
 
-        if (!response.ok) {
-          throw new Error("Ошибка загрузки товаров");
-        }
+        const res = await fetch("http://5.129.246.215:8000/productsV2");
+        if (!res.ok) throw new Error("Ошибка загрузки товаров");
 
-        const data = await response.json();
-        setProducts(data.products || []);
+        const data = await res.json();
+        const cleaned = (data.products || []).map(normalizeProduct);
+
+        setProducts(cleaned);
       } catch (err) {
         setError(err.message);
-        console.error("Error fetching products:", err);
       } finally {
         setLoading(false);
       }
@@ -42,63 +107,71 @@ export default function Catalog() {
     fetchProducts();
   }, []);
 
-  const toggleFav = (id) => {
-    setFavorites((prev) =>
-      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
-    );
-  };
-
-  // Фильтрация по категории
+  // === ФИЛЬТР ================================================================
   const filtered = selectedCat
     ? products.filter((p) => p.category_id === selectedCat)
     : products;
 
-  // Сортировка
+  // === СОРТИРОВКА ============================================================
   const sorted = [...filtered].sort((a, b) => {
-    if (sortType === "cheap") return parseFloat(a.price) - parseFloat(b.price);
-    if (sortType === "expensive")
-      return parseFloat(b.price) - parseFloat(a.price);
+    if (sortType === "cheap") return a.base_price - b.base_price;
+    if (sortType === "expensive") return b.base_price - a.base_price;
     if (sortType === "new") return b.id - a.id;
     return 0;
   });
 
+  // === РАЗВОРОТ 1 ЦВЕТ = 1 КАРТОЧКА ==========================================
+  const flattened = sorted.flatMap((p) =>
+    p.variants.map((v) => ({
+      product_id: p.id,
+      variant_id: v.id,
+      full_name: p.full_name,
+      category_id: p.category_id,
+      price: p.base_price,
+      color: v.color,
+      hex_color: v.hex_color,
+      images: v.images,
+    }))
+  );
+const searchParams = useSearchParams();
+const catFromUrl = searchParams.get("cat");
+
+useEffect(() => {
+  if (catFromUrl) {
+    setSelectedCat(Number(catFromUrl));
+  }
+}, [catFromUrl]);
   const getProductImage = (product) => {
-    return "/Home/Categories/Жилетки.jpg";
+    if (product.images?.length) return "http://5.129.246.215:8000/" + product.images[0];
+    return "/placeholder.jpg";
   };
 
-  if (loading) {
-    return (
-      <div className="catalog">
-        <div className="loading">Загрузка товаров...</div>
-      </div>
-    );
-  }
+  // === РЕНДЕР ================================================================
+  if (loading)
+    return <div className="catalog"><div className="loading">Загрузка...</div></div>;
 
-  if (error) {
-    return (
-      <div className="catalog">
-        <div className="error">Ошибка: {error}</div>
-      </div>
-    );
-  }
+  if (error)
+    return <div className="catalog"><div className="error">{error}</div></div>;
 
   return (
     <div className="catalog">
-      {/* Левый фильтр */}
+
+      {/* Мобильный фильтр */}
       <div className="catalog__filter__mob">
         <ul>
-          {categories.map((category) => (
+          {data?.categories?.map((c) => (
             <li
-              key={category.id}
-              className={category.id === selectedCat ? "active" : ""}
+              key={c.id}
+              className={c.id === selectedCat ? "active" : ""}
               onClick={() =>
-                setSelectedCat(category.id === selectedCat ? null : category.id)
+                setSelectedCat(c.id === selectedCat ? null : c.id)
               }
             >
-              {category.name}
+              {c.name}
             </li>
           ))}
         </ul>
+
         <select value={sortType} onChange={(e) => setSortType(e.target.value)}>
           <option value="new">Сначала новинки</option>
           <option value="cheap">Сначала недорогие</option>
@@ -106,78 +179,73 @@ export default function Catalog() {
         </select>
       </div>
 
+      {/* Левый сайдбар */}
       <aside className="catalog__filter">
         <ul>
-          {categories.map((category) => (
+          {data?.categories?.map((c) => (
             <li
-              key={category.id}
-              className={category.id === selectedCat ? "active" : ""}
+              key={c.id}
+              className={c.id === selectedCat ? "active" : ""}
               onClick={() =>
-                setSelectedCat(category.id === selectedCat ? null : category.id)
+                setSelectedCat(c.id === selectedCat ? null : c.id)
               }
             >
-              {category.name}
+              {c.name}
             </li>
           ))}
         </ul>
       </aside>
 
-      {/* Центральная сетка */}
+      {/* Сетка товаров */}
       <div className="catalog__content">
         <div className="catalog__grid">
-          {sorted.map((product) => (
+          {flattened.map((product) => (
             <Link
-              href={`/catalog/product/${product.id}`}
+              href={`/catalog/${buildProductUrl(product.full_name, product.color, product.product_id)}?id=${product.product_id}&variant_id=${product.variant_id}`}
               className="product-card"
-              key={product.id}
+              key={`${product.product_id}-${product.color}`}
             >
               <div className="product-card__img">
-                <img src={getProductImage(product)} alt={product.full_name} />
+                <img
+                  src={getProductImage(product)}
+                  alt={product.full_name}
+                />
+
                 <button
-                  className={`fav ${
-                    favorites.includes(product.id) ? "active" : ""
-                  }`}
+                  className={`fav ${favorites.includes(product.product_id) ? "active" : ""}`}
                   onClick={(e) => {
                     e.preventDefault();
-                    toggleFav(product.id);
+                    toggleFav(product.product_id);
                   }}
                 >
                   <svg
                     width="20"
                     height="20"
                     viewBox="0 0 20 20"
-                    fill="none"
                     xmlns="http://www.w3.org/2000/svg"
                   >
-                    <g clipPath="url(#clip0_668_10)">
-                      <path
-                        d="M15.411 2.31742C13.171 1.78658 11.2027 3.09408 10.4468 4.00908L9.99518 4.55659L9.54435 4.00908C8.79101 3.09575 6.79101 1.79325 4.58185 2.31742C3.45851 2.58325 2.55351 3.17658 1.96185 4.03992C1.37018 4.90242 1.06018 6.08408 1.21685 7.58408C1.34435 8.82242 1.96101 10.0708 2.79435 11.2341C3.62185 12.3933 4.63101 13.4224 5.48351 14.2174C7.04768 15.6758 8.38685 16.5983 9.99685 17.6024C11.6168 16.5958 12.9852 15.6899 14.5302 14.2216C16.4235 12.4199 18.4585 10.1008 18.7768 7.57159C19.1102 4.92325 17.6235 2.84075 15.4102 2.31658L15.411 2.31742ZM9.99518 2.76992C11.1268 1.71658 13.2452 0.578251 15.6785 1.15575C18.5118 1.82658 20.3493 4.50325 19.9452 7.72242C19.5668 10.7216 17.2152 13.3016 15.3352 15.0916C13.6018 16.7399 12.071 17.7183 10.3018 18.8116L9.99518 18.9999L9.69018 18.8116C7.91185 17.7116 6.43018 16.7224 4.68768 15.0949C3.81018 14.2758 2.73518 13.1858 1.84101 11.9358C0.951848 10.6916 0.205181 9.24159 0.0468477 7.71075C-0.133152 5.97325 0.216848 4.49492 0.995181 3.35825C1.77351 2.22159 2.94435 1.47908 4.31435 1.15492C6.71851 0.584918 8.85601 1.71658 9.99518 2.76992Z"
-                        fill="white"
-                      />
-                    </g>
-                    <defs>
-                      <clipPath id="clip0_668_10">
-                        <rect width="20" height="20" fill="white" />
-                      </clipPath>
-                    </defs>
+                    <path
+                      d="M15.411 2.31742C13.171..."
+                      fill="white"
+                    />
                   </svg>
                 </button>
               </div>
+
               <div className="product-card__title">{product.full_name}</div>
               <div className="product-card__price">
                 {parseInt(product.price)} ₽
               </div>
-              {product.discount !== "0" && (
-                <div className="product-card__discount">
-                  -{product.discount}%
-                </div>
-              )}
             </Link>
           ))}
+
+          {flattened.length === 0 && (
+            <div className="catalog__empty">Нет товаров</div>
+          )}
         </div>
       </div>
 
-      {/* Правый сайдбар сортировки */}
+      {/* Правый сайдбар */}
       <aside className="catalog__sort">
         <select value={sortType} onChange={(e) => setSortType(e.target.value)}>
           <option value="new">Сначала новинки</option>

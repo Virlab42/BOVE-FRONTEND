@@ -9,9 +9,10 @@
     background-color: white;
 
     .categories-card-container {
-        display: flex;
-        flex-direction: row;
-        gap: 20px;
+        //display: flex;
+        //flex-direction: row;
+        //gap: 20px;
+        width: 100%;
 
         .categories-card {
             position: relative;

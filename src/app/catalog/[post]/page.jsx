@@ -1,49 +1,52 @@
 import ProductPage from "./ProductPage";
 
-export async function generateMetadata({ params }) {
-  const id = params.id;
+const BASE_URL = "http://5.129.246.215:8000";
 
-  // Здесь в реальном проекте ты возьмёшь товар из БД
-  const product = {
-    id,
-    title: "Жилетка черная One Size",
-    description: "Классический мужской костюм прямого кроя.",
-    images: [
-      "/Home/Categories/Жилетки.jpg",
-      "/Home/Categories/Костюмы.jpg",
-      "/Home/Categories/Жилетки.jpg",
-      "/Home/Categories/Жилетки.jpg",
-      "/Home/Categories/Жилетки.jpg",
-    ],
-    price: 12990,
-  };
+// ======== Server Fetch ========
+async function getProduct(productId) {
+  const res = await fetch(`${BASE_URL}/productsV2/${productId}`, {
+    next: { revalidate: 30 },
+  });
+
+  if (!res.ok) return null;
+  return res.json();
+}
+
+// ======== Metadata Generation ========
+export async function generateMetadata({ params, searchParams }) {
+  const productId = searchParams.id;
+  if (!productId) return { title: "Товар" };
+
+  const data = await getProduct(productId);
+  if (!data?.product) return { title: "Товар" };
+
+  const p = data.product;
+
+  const firstVariant = p.variants?.[0];
+  const firstImage = firstVariant?.image?.split(",")[0];
 
   return {
-    title: `${product.title} — купить за ${product.price} ₽`,
-    description: product.description,
+    title: `${p.full_name} — купить`,
+    description: p.description || `Купить ${p.full_name} в наличии.`,
     openGraph: {
-      title: product.title,
-      description: product.description,
-      images: product.images[1],
+      title: p.full_name,
+      description: p.description || "",
+      images: firstImage ? `${BASE_URL}/${firstImage}` : "",
     },
   };
 }
 
-export default function Page({ params }) {
-  const product = {
-    id: params.id,
-    title: "Жилетка черная One Size",
-    description: "Классическая жилетка прямого кроя.",
-    images: [
-      "/Home/Categories/Жилетки.jpg",
-      "/Home/Categories/Костюмы.jpg",
-      "/Home/Categories/Верхняя.jpg",
-      "/Home/Categories/Рубашки.jpg",
-      "/Home/Categories/Жилетки.jpg",
-    ],
-    colors: ["#ffffff", "#000000", "#999999"],
-    sizes: ["S", "M", "L", "XL"],
-    price: 12990,
-  };
-  return <ProductPage product={product} />;
+// ======== Page Component ========
+export default async function Page({ params, searchParams }) {
+  const productId = searchParams.id;
+  const variantId = searchParams.variant_id;
+
+  const data = await getProduct(productId);
+
+  return (
+    <ProductPage
+      product={data?.product}
+      selectedVariantId={Number(variantId)}
+    />
+  );
 }
