@@ -5,8 +5,8 @@ export async function POST(req) {
     const body = await req.json(); // Получаем данные из тела запроса
     const { name, phone } = body;
 
-    const CHAT_ID = ''; // Замените на ваш Chat ID
-    const BOT_TOKEN = ''; // Замените на ваш Bot Token
+    const CHAT_ID = '-4809235355'; // Chat ID
+    const BOT_TOKEN = '8001734265:AAFFTF2qy3-7W6xh9L2Ht-pr4Gwyp4TwA1k'; // Bot Token
     const TELEGRAM_API_URL = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
 
     const text = `

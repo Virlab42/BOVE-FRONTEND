@@ -7,34 +7,21 @@ import "./OrderSuccess.scss";
 export default function OrderSuccess() {
   const searchParams = useSearchParams();
   const orderId = searchParams.get("orderId");
+  const orderDataParam = searchParams.get("data");
   const [orderDetails, setOrderDetails] = useState(null);
 
   useEffect(() => {
-    if (orderId) {
-      const mockOrder = {
-        id: orderId,
-        customer: {
-          name: "Иван Иванов",
-          email: "ivan@example.com",
-          phone: "+7 (999) 999-99-99",
-        },
-        delivery: {
-          method: "cdek",
-          address: "г. Москва, ул. Тверская, д. 1",
-          cost: 300,
-        },
-        items: [
-          { name: "Товар 1", price: 1500, quantity: 1 },
-          { name: "Товар 2", price: 2500, quantity: 2 },
-        ],
-        total: 6700,
-        estimatedDelivery: "2024-01-15",
-      };
-      setOrderDetails(mockOrder);
+    if (orderDataParam) {
+      try {
+        const parsedOrder = JSON.parse(decodeURIComponent(orderDataParam));
+        setOrderDetails(parsedOrder);
+      } catch (e) {
+        console.error("Не удалось распарсить заказ:", e);
+      }
     }
-  }, [orderId]);
+  }, [orderDataParam]);
 
-  if (!orderId) {
+  if (!orderId || !orderDetails) {
     return (
       <div className="order-success">
         <div className="container">
@@ -56,7 +43,7 @@ export default function OrderSuccess() {
         <div className="success-header">
           <h1>Заказ успешно оформлен!</h1>
           <p className="success-message">
-            Спасибо за ваш заказ. Мы отправили подтверждение на вашу почту.
+            Спасибо за ваш заказ. Мы свяжемся с вами в ближайшее время для подтверждения.
           </p>
         </div>
 
@@ -75,19 +62,9 @@ export default function OrderSuccess() {
               <div className="info-item">
                 <span className="label">Дата оформления:</span>
                 <span className="value">
-                  {new Date().toLocaleDateString("ru-RU")}
+                  {new Date(orderDetails.date).toLocaleDateString("ru-RU")}
                 </span>
               </div>
-              {orderDetails?.estimatedDelivery && (
-                <div className="info-item">
-                  <span className="label">Примерная дата доставки:</span>
-                  <span className="value">
-                    {new Date(
-                      orderDetails.estimatedDelivery
-                    ).toLocaleDateString("ru-RU")}
-                  </span>
-                </div>
-              )}
             </div>
           </div>
 
@@ -118,9 +95,9 @@ export default function OrderSuccess() {
                 <div className="info-item">
                   <span className="label">Способ:</span>
                   <span className="value">
-                    {orderDetails.delivery.method === "pickup"
-                      ? "Самовывоз"
-                      : "Доставка СДЭК"}
+                    {orderDetails.delivery.method === "cdek"
+                      ? "Доставка СДЭК"
+                      : "Курьерская доставка по Москве"}
                   </span>
                 </div>
                 <div className="info-item">
@@ -129,7 +106,7 @@ export default function OrderSuccess() {
                 </div>
                 <div className="info-item">
                   <span className="label">Стоимость доставки:</span>
-                  <span className="value">{orderDetails.delivery.cost} ₽</span>
+                  <span className="value">от {orderDetails.delivery.cost} ₽</span>
                 </div>
               </div>
             </div>

@@ -5,7 +5,91 @@
   display: flex;
   flex-direction: column;
   gap: 30px;
+  h1{
+    margin-bottom: 0;
+  }
+  h2{
+    margin-bottom: 0;
+  }
+  @media screen and (max-width: 1380px) {
+    padding: 125px 10vw 80px 10vw;
+  }
 
+  @media screen and (max-width: 1195px) {
+    padding: 100px 5vw 80px 5vw;
+  }
+
+  @media screen and (max-width: 1060px) {
+    gap: 20px;
+    .cart-items{
+      padding: 20px !important;
+    }
+    .cart-promo{
+      padding: 20px !important;
+    }
+    .cart-summary{
+      padding: 20px !important;
+    }
+  }
+  @media screen and (max-width: 530px) {
+    padding: 80px 3vw 80px 3vw;
+  }
+  @media screen and (max-width: 500px) {
+    gap: 3vw;
+    padding: 80px 3vw 80px 3vw;
+    .cart-items{
+      padding: 3vw !important;
+    }
+    .cart-item{
+      gap: 3vw !important;
+      &__title{
+        font-size: 14px;
+      }
+      &__options{
+        font-size: 12px;
+      }
+      &__price{
+        font-size: 20px;
+      }
+      &__image-link{
+        width: 35%;
+        height: 50%;
+      }
+      &__controls{
+        gap: 20px;
+      }
+      &__remove{
+        svg{
+          width: 18px;
+          height: auto;
+        }
+      }
+      &__quantity-btn{
+        font-size: 18px;
+      }
+      &__quantity-value{
+        font-size: 16px;
+      }
+    }
+    
+    .cart-promo{
+      gap: 10px !important;
+      .promo-row{
+        flex-wrap: wrap;
+        justify-content: flex-start !important;
+        gap: 3vw !important;
+          .apply-promo{
+            width: 100%;
+          }
+        .promo-container{
+          flex: 1;
+          input{
+            padding: 0;
+          }
+        }
+      }
+    }
+  }
   .cart-items {
     display: flex;
     flex-direction: column;
@@ -27,10 +111,11 @@
 
     .promo-row {
       display: flex;
-      gap: 10px;
+      gap: 20px;
       align-items: flex-end;
       justify-content: space-between;
-      .promo-container{
+
+      .promo-container {
         position: relative;
         display: flex;
         width: 50%;

@@ -1,4 +1,5 @@
 "use client";
+import Inputmask from "inputmask";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/context/CartContext";
@@ -12,6 +13,7 @@ export default function CheckoutPage() {
     name: "",
     phone: "",
     email: "",
+    address: "",
   });
 
   const [deliveryMethod, setDeliveryMethod] = useState("pickup");
@@ -21,7 +23,14 @@ export default function CheckoutPage() {
   const [errors, setErrors] = useState({});
 
   const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-  const deliveryCost = deliveryMethod === "pickup" ? 0 : 300;
+  const deliveryCost =
+    deliveryMethod === "pickup"
+      ? 0
+      : deliveryMethod === "cdek"
+        ? 300
+        : deliveryMethod === "moscowCourier"
+          ? 800 // базовая цена, при желании можно уточнять
+          : 0;
 
   const loadCdekPoints = async () => {
     if (deliveryMethod !== "cdek") return;
@@ -50,6 +59,14 @@ export default function CheckoutPage() {
   };
 
   useEffect(() => {
+    const phoneInput = document.querySelector("input[name='phone']");
+    if (phoneInput) {
+      const im = new Inputmask("+7 (999) 999-99-99");
+      im.mask(phoneInput);
+    }
+  }, []);
+
+  useEffect(() => {
     loadCdekPoints();
   }, [deliveryMethod]);
 
@@ -73,6 +90,10 @@ export default function CheckoutPage() {
 
     if (!formData.name.trim()) {
       newErrors.name = "Введите имя";
+    }
+
+    if (!formData.address.trim()) {
+      newErrors.address = "Введите адрес";
     }
 
     if (!formData.phone.trim()) {
@@ -108,16 +129,22 @@ export default function CheckoutPage() {
 
     try {
       const orderData = {
-        customer: formData,
+        customer: {
+          name: formData.name,
+          phone: formData.phone,
+          email: formData.email,
+        },
         delivery: {
           method: deliveryMethod,
-          point: deliveryMethod === "cdek" ? selectedPoint : null,
+          point: deliveryMethod,
+          address: formData.address,
           cost: deliveryCost,
         },
         items: cart,
-        total: total + deliveryCost,
+        total: total,
+        date: new Date().toISOString(),
       };
-
+      console.log(orderData);
       const response = await fetch("/api/orders", {
         method: "POST",
         headers: {
@@ -130,7 +157,8 @@ export default function CheckoutPage() {
 
       if (result.success) {
         clear();
-        router.push(`/order-success?orderId=${result.orderId}`);
+        const encodedOrder = encodeURIComponent(JSON.stringify(orderData));
+        router.push(`/order-success?orderId=${result.orderId}&data=${encodedOrder}`);
       } else {
         alert("Ошибка при оформлении заказа");
       }
@@ -156,6 +184,15 @@ export default function CheckoutPage() {
     );
   }
 
+  const cleanedPhone = formData.phone.replace(/\D/g, ""); // Очищаем номер
+
+  const isFormValid =
+  formData.name.trim().length > 0 &&
+  cleanedPhone.length === 11 &&
+  formData.email.trim().length > 0 &&
+  /^\S+@\S+\.\S+$/.test(formData.email) &&
+  formData.address.trim().length > 0 &&
+  deliveryMethod.trim().length > 0;
   return (
     <div className="checkout-page">
       <h1>Оформление заказа</h1>
@@ -172,16 +209,13 @@ export default function CheckoutPage() {
                     name="name"
                     value={formData.name}
                     onChange={handleInputChange}
-                    placeholder="Введите имя *"
+                    placeholder="Ваше имя *"
                     className={errors.name ? "error" : ""}
                   />
                   {errors.name && (
                     <span className="error-text">{errors.name}</span>
                   )}
                 </div>
-              </div>
-
-              <div className="form-row">
                 <div className="form-group">
                   <input
                     type="tel"
@@ -195,6 +229,9 @@ export default function CheckoutPage() {
                     <span className="error-text">{errors.phone}</span>
                   )}
                 </div>
+              </div>
+
+              <div className="form-row">
 
                 <div className="form-group">
                   <input
@@ -202,11 +239,24 @@ export default function CheckoutPage() {
                     name="email"
                     value={formData.email}
                     onChange={handleInputChange}
-                    placeholder="Введите почту *"
+                    placeholder="Ваш email *"
                     className={errors.email ? "error" : ""}
                   />
                   {errors.email && (
                     <span className="error-text">{errors.email}</span>
+                  )}
+                </div>
+                <div className="form-group">
+                  <input
+                    type="text"
+                    name="address"
+                    value={formData.address}
+                    onChange={handleInputChange}
+                    placeholder="Ваш адрес *"
+                    className={errors.address ? "error" : ""}
+                  />
+                  {errors.address && (
+                    <span className="error-text">{errors.address}</span>
                   )}
                 </div>
               </div>
@@ -216,23 +266,8 @@ export default function CheckoutPage() {
               <h2>Способ получения</h2>
 
               <div className="delivery-methods">
-                {/* <label className="delivery-option">
-                  <input
-                    type="radio"
-                    name="delivery"
-                    value="pickup"
-                    checked={deliveryMethod === "pickup"}
-                    onChange={(e) => setDeliveryMethod(e.target.value)}
-                  />
-                  <div className="delivery-info">
-                    <span className="delivery-title">Самовывоз</span>
-                    <span className="delivery-desc">
-                      г. Москва, ул. Примерная, д. 123
-                    </span>
-                    <span className="delivery-price">Бесплатно</span>
-                  </div>
-                </label> */}
 
+                {/* Доставка СДЭК — без списка пунктов */}
                 <label className="delivery-option">
                   <input
                     type="radio"
@@ -244,51 +279,43 @@ export default function CheckoutPage() {
                   <div className="delivery-info">
                     <span className="delivery-title">Доставка СДЭК</span>
                     <span className="delivery-desc">
-                      Доставка до пункта выдачи
+                      Доставим в ближайший к вам пункт выдачи
                     </span>
-                    <span className="delivery-price">300 ₽</span>
+                    <span className="delivery-price">от 300 ₽</span>
                   </div>
                 </label>
+
+                {/* Курьерская доставка по Москве */}
+                <label className="delivery-option">
+                  <input
+                    type="radio"
+                    name="delivery"
+                    value="moscowCourier"
+                    checked={deliveryMethod === "moscowCourier"}
+                    onChange={(e) => setDeliveryMethod(e.target.value)}
+                  />
+                  <div className="delivery-info">
+                    <span className="delivery-title">Курьерская доставка по Москве</span>
+                    <span className="delivery-desc">
+                      — Москва (в пределах МКАД) 800 руб.<br />
+                      — Доставка до шоурума 1500 руб.<br />
+                      — Московская область (до 10 км от МКАД) 1200 руб.<br />
+                      — Московская область (10–30 км от МКАД) 1500 руб.<br />
+                      — Московская область (30–50 км от МКАД) 2500 руб.
+                    </span>
+                  </div>
+                </label>
+
               </div>
 
-              {deliveryMethod === "cdek" && (
-                <div className="delivery-points">
-                  <h3>Выберите пункт выдачи</h3>
-                  {isLoading ? (
-                    <div className="loading">Загрузка пунктов выдачи...</div>
-                  ) : (
-                    <div className="points-list">
-                      {deliveryPoints.map((point) => (
-                        <label key={point.code} className="point-option">
-                          <input
-                            type="radio"
-                            name="deliveryPoint"
-                            value={point.code}
-                            checked={selectedPoint === point.code}
-                            onChange={(e) => setSelectedPoint(e.target.value)}
-                          />
-                          <div className="point-info">
-                            <span className="point-name">{point.name}</span>
-                            <span className="point-address">
-                              {point.address}
-                            </span>
-                            <span className="point-price">{point.price} ₽</span>
-                          </div>
-                        </label>
-                      ))}
-                    </div>
-                  )}
-                  {errors.delivery && (
-                    <span className="error-text">{errors.delivery}</span>
-                  )}
-                </div>
-              )}
+
+
             </div>
 
             <button
               type="submit"
               className="submit-order-btn"
-              disabled={isLoading}
+              disabled={isLoading || !isFormValid}
             >
               {isLoading ? "Оформление..." : "Оформить заказ"}
             </button>
@@ -319,7 +346,7 @@ export default function CheckoutPage() {
             </div>
             <div className="total-row">
               <span>Доставка:</span>
-              <span>{deliveryCost} ₽</span>
+              <span>от {deliveryCost} ₽</span>
             </div>
             <hr />
             <div className="total-row final-total">

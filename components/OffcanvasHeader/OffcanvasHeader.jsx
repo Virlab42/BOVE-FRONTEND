@@ -5,19 +5,25 @@ import Link from "next/link";
 import Image from 'next/image';
 
 export default function OffcanvasHeader(){
-    const handleLinkClick = async (e, target) => {
-        e.preventDefault();
+    const router = useRouter();
+    const handleLinkClick = async (e, href, anchor = null) => {
+    e.preventDefault();
 
-        const element = document.querySelector(target);
-        if (element) {
-            element.scrollIntoView({ behavior: 'smooth' });
-        }
+    // Закрываем оффканвас
+    const { Offcanvas } = await import('bootstrap');
+    const offcanvasElement = document.getElementById('offcanvasRight');
+    const offcanvasInstance = Offcanvas.getInstance(offcanvasElement) || new Offcanvas(offcanvasElement);
+    offcanvasInstance.hide();
 
-        const { Offcanvas } = await import('bootstrap');
-        const offcanvasElement = document.getElementById('offcanvasRight');
-        const offcanvasInstance = Offcanvas.getInstance(offcanvasElement) || new Offcanvas(offcanvasElement);
-        offcanvasInstance.hide();
-    };
+    if (anchor) {
+      // Скролл к элементу на текущей странице
+      const element = document.querySelector(anchor);
+      if (element) element.scrollIntoView({ behavior: 'smooth' });
+    } else {
+      // Переход на другой маршрут
+      router.push(href);
+    }
+  };
     return(
         <>
             <div className="offcanvas offcanvas-end" data-bs-scroll="false" data-bs-backdrop="false" tabIndex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
