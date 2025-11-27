@@ -1,6 +1,6 @@
 import ProductPage from "./ProductPage";
 
-const BASE_URL = "https://api.bove-brand.ru";
+const BASE_URL = "http://5.129.246.215:8000";
 
 // ======== Server Fetch ========
 async function getProduct(productId) {

@@ -8,7 +8,7 @@ import GalleryModal from "./components/GalleryModal";
 import SizeGuideModal from "./components/SizeGuideModal";
 import ProductInfo from "./components/ProductInfo";
 
-const BASE_URL = "https://api.bove-brand.ru";
+const BASE_URL = "http://5.129.246.215:8000";
 
 export default function ProductPage({ product, selectedVariantId }) {
   // ---- Выбираем вариант ----
