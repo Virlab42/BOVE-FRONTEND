@@ -41,8 +41,8 @@ export default function OffcanvasHeader(){
                         <Link className='link-close' href='/catalog' onClick={(e) => handleLinkClick(e, '/catalog')}>Каталог</Link>
                         <Link className='link-close' href='/about'  onClick={(e) => handleLinkClick(e, '/about')}>О бренде</Link>
                         <Link className='link-close' href='/contacts'  onClick={(e) => handleLinkClick(e, '/contacts')}>Контакты</Link>
-                        <Link className='link-close' href='/info'  onClick={(e) => handleLinkClick(e, '/info')}>Блог стилиста</Link>
-                        <Link className='link-close' href=''  onClick={(e) => handleLinkClick(e, '')}>Информация</Link>
+                        <Link className='link-close' href=''  onClick={(e) => handleLinkClick(e, '')}>Блог стилиста</Link>
+                        <Link className='link-close' href='/info'  onClick={(e) => handleLinkClick(e, '/info')}>Информация</Link>
                     </div>
                 </div>
             </div>
