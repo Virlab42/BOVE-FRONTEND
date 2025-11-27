@@ -14,7 +14,7 @@ export default function CartItem({ item, index }) {
   const handleIncrement = () => {
     updateQuantity(index, item.quantity + 1);
   };
-console.log(`http://5.129.246.215:8000/${item.image}`);
+console.log(`https://api.bove-brand.ru/${item.image}`);
   return (
     <div className="cart-item">
       <Link href={`${item.url}`} className="cart-item__image-link">

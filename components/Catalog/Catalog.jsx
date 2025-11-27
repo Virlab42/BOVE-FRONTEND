@@ -83,7 +83,7 @@ export default function Catalog({ initialCat }) {
       try {
         setLoading(true);
 
-        const res = await fetch("http://5.129.246.215:8000/productsV3");
+        const res = await fetch("https://api.bove-brand.ru/productsV3");
         if (!res.ok) throw new Error("Ошибка загрузки товаров");
 
         const data = await res.json();
@@ -129,7 +129,7 @@ export default function Catalog({ initialCat }) {
   );
 
   const getProductImage = (product) => {
-    if (product.images?.length) return "http://5.129.246.215:8000/" + product.images[0];
+    if (product.images?.length) return "https://api.bove-brand.ru/" + product.images[0];
     return "/placeholder.jpg";
   };
 

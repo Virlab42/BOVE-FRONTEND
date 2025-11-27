@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { useCart } from "@/context/CartContext";
 
-const BASE_URL = "http://5.129.246.215:8000";
+const BASE_URL = "https://api.bove-brand.ru";
 
 function slugifyTranslit(productName, colorName, id) {
   const translitMap = {

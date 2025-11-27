@@ -3,9 +3,9 @@ const nextConfig = {
     images: {
     remotePatterns: [
       {
-        protocol: "http",
-        hostname: "5.129.246.215",
-        port: "8000",
+        protocol: "https",
+        hostname: "api.bove-brand.ru",
+        port: "",
         pathname: "/**",
       },
     ],
