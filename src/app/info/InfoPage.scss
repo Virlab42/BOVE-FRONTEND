@@ -1,0 +1,104 @@
+@import '/public/const.scss/';
+
+.info-page {
+  padding: 100px 80px 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+min-height: 75vh;
+@media (max-width: 768px){
+    padding: 80px 3vw 80px !important;
+    &__title{
+        font-size: 30px !important;
+        margin-bottom: 20px !important;
+    }
+}
+  &__title {
+    font-size: 36px;
+    font-weight: 600;
+    margin-bottom: 40px;
+    text-align: left;
+  }
+
+  &__accordion {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    .accordion-item {
+      border-top: 1px solid rgba(0, 0, 0, 0.3);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+      overflow: hidden;
+
+      .accordion-header {
+        width: 100%;
+        padding: 16px 20px;
+        background-color: transparent;
+        color: black;
+        font-weight: 600;
+        font-size: 18px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        cursor: pointer;
+        border: none;
+        outline: none;
+
+        .accordion-icon {
+          transition: transform 0.3s ease;
+          &.open {
+            transform: rotate(180deg);
+          }
+        }
+      }
+
+      .accordion-body {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.4s ease, padding 0.4s ease;
+        padding: 0 20px;
+
+        &.open {
+          max-height: 500px; // достаточно для контента
+          padding: 16px 20px;
+        }
+
+        .contacts-item {
+          margin-bottom: 10px;
+          a {
+            color: black;
+            text-decoration: underline;
+            transition: color 0.3s ease;
+            &:hover {
+              color: $Vinous;
+            }
+          }
+        }
+
+        ul {
+          list-style: disc;
+          padding-left: 20px;
+          li {
+            margin-bottom: 8px;
+            a {
+              color: black;
+              text-decoration: underline;
+              &:hover {
+                color: $Vinous;
+              }
+            }
+          }
+        }
+
+        .stores-placeholder {
+          margin-top: 20px;
+          display: flex;
+          justify-content: center;
+          img {
+            border-radius: 12px;
+            object-fit: cover;
+          }
+        }
+      }
+    }
+  }
+}

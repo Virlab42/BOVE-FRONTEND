@@ -8,9 +8,8 @@ import GalleryModal from "./components/GalleryModal";
 import SizeGuideModal from "./components/SizeGuideModal";
 import ProductInfo from "./components/ProductInfo";
 
-const BASE_URL = "https://api.bove-brand.ru";
-
 export default function ProductPage({ product, selectedVariantId }) {
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
   // ---- Выбираем вариант ----
   const initialVariant =
     product.variants.find((v) => v.id === selectedVariantId) ||

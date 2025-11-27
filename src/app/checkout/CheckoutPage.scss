@@ -35,7 +35,27 @@
     font-size: 40px;
     text-align: left;
   }
-
+  .checkout-agreement{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    label{
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      a{
+        text-decoration: underline;
+        color: $Vinous;
+        font-weight: 500;
+      }
+      input{
+        width: fit-content;
+        margin-right: 10px;
+      }
+    }
+  }
   .empty-cart {
     text-align: center;
     padding: 60px 20px;

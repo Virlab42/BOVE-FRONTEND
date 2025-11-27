@@ -18,7 +18,7 @@ export default function Hero() {
             Одежда для тех, кто превращает <br></br>
             мгновения в события
           </p>
-          <Link className="hero-cta" href="">
+          <Link className="hero-cta" href="/catalog">
             За покупками
             <svg
               width="35"

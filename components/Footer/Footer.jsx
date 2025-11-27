@@ -11,11 +11,11 @@ function Footer(){
                   <div className='nav-container'>
                     <div className='nav-block'>
                       <Image src='/BOVE_LOGO.svg' width={500} height={300} alt='BOVE' />
-                      <Link href='' className="nav-link">Каталог</Link>
-                      <Link href='' className="nav-link">О бренде</Link>
-                      <Link href='' className="nav-link">Контакты</Link>
+                      <Link href='/catalog' className="nav-link">Каталог</Link>
+                      <Link href='/about' className="nav-link">О бренде</Link>
+                      <Link href='/contacts' className="nav-link">Контакты</Link>
                       <Link href='' className="nav-link">Блог стилиста</Link>
-                      <Link href='' className="nav-link">Информация</Link>
+                      <Link href='/info' className="nav-link">Информация</Link>
                     </div>
                   <div className='nav-contacts'>
                     <p>Следите за нами</p>
@@ -38,8 +38,8 @@ function Footer(){
                   </div>
                     <div className='politics'>
                       <span>© BOVÉ 2025</span>
-                      <a href="#"  type="button" data-bs-toggle="modal" data-bs-target="#сonfidentiality" className='confidentiality-footer'>Политика конфиденциальности</a>
-                      <a href="#"  type="button" data-bs-toggle="modal" data-bs-target="#сonfidentiality" className='confidentiality-footer'>Пользовательское соглашение</a>
+                      <a href="/docs/политика_конфиденциальности.pdf"  type="button" data-bs-toggle="modal" data-bs-target="#сonfidentiality" className='confidentiality-footer'>Политика конфиденциальности</a>
+                      <a href="/docs/согласие_на_обработку_пдн.pdf"  type="button" data-bs-toggle="modal" data-bs-target="#сonfidentiality" className='confidentiality-footer'>Пользовательское соглашение</a>
                       <p>ИНН: 420533055279</p>
                       <p>ОГРНИП: 323420500068510</p>
                     </div>

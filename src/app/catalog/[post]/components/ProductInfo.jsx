@@ -2,8 +2,7 @@
 import { useState, useEffect } from "react";
 import { useCart } from "@/context/CartContext";
 
-const BASE_URL = "https://api.bove-brand.ru";
-
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 function slugifyTranslit(productName, colorName, id) {
   const translitMap = {
     а: "a", б: "b", в: "v", г: "g", д: "d",
@@ -153,7 +152,7 @@ export default function ProductInfo({
   return (
     <div className="product-page__info">
       <h1 className="title">{full_name}</h1>
-      <div className="price">{base_price} ₽</div>
+      <div className="price">{base_price > 0 ? `${base_price} ₽` : "Скоро будет"}</div>
 
       {/* ==== Цвета ==== */}
       <div className="choose">

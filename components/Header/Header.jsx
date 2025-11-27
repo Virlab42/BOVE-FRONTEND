@@ -68,10 +68,10 @@ export default function Header() {
                 </button>
                 <div className='menu'>
                     <Link href='/catalog'>Каталог</Link>
-                    <Link href=''>О бренде</Link>
-                    <Link href=''>Контакты</Link>
+                    <Link href='/about'>О бренде</Link>
+                    <Link href='/contacts'>Контакты</Link>
                     <Link href=''>Блог стилиста</Link>
-                    <Link href=''>Информация</Link>
+                    <Link href='/info'>Информация</Link>
                 </div>
                 <Link href='/' className='logo-container'>
 

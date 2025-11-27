@@ -48,6 +48,7 @@ export default function Catalog({ initialCat }) {
 
   const { data } = useCategories()
 
+  const API_URL = process.env.NEXT_PUBLIC_API_URL;
   // === НОРМАЛИЗАЦИЯ ВАРИАНТОВ ===============================================
   const normalizeVariantImages = (variant) => {
     if (!variant.image) return [];
@@ -83,7 +84,7 @@ export default function Catalog({ initialCat }) {
       try {
         setLoading(true);
 
-        const res = await fetch("https://api.bove-brand.ru/productsV3");
+        const res = await fetch(`${API_URL}/productsV3`);
         if (!res.ok) throw new Error("Ошибка загрузки товаров");
 
         const data = await res.json();
@@ -129,7 +130,7 @@ export default function Catalog({ initialCat }) {
   );
 
   const getProductImage = (product) => {
-    if (product.images?.length) return "https://api.bove-brand.ru/" + product.images[0];
+    if (product.images?.length) return `${API_URL}/` + product.images[0];
     return "/placeholder.jpg";
   };
 
@@ -234,7 +235,7 @@ export default function Catalog({ initialCat }) {
 
               <div className="product-card__title">{product.full_name} {product.name_for_colors}</div>
               <div className="product-card__price">
-                {parseInt(product.price)} ₽
+                {product.price > 0 ? `${parseInt(product.price)} ₽` : "Скоро будет"}
               </div>
             </Link>
           ))}

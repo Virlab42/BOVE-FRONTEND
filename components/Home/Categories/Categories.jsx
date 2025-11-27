@@ -10,7 +10,7 @@ import 'swiper/css'
 
 export default function Categories() {
     const { data } = useCategories()
-
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
     return (
         <section className='categories-container'>
             <Swiper
@@ -48,7 +48,7 @@ export default function Categories() {
                     <SwiperSlide key={c.id}>
                         <Link href={`/catalog?cat=${c.id}`} className='categories-card'>
                             <Image
-                                src={`https://api.bove-brand.ru/${c.category_image}`}
+                                src={`${API_URL}/${c.category_image}`}
                                 width={1000}
                                 height={1000}
                                 alt={c.name}

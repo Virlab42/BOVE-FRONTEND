@@ -111,7 +111,7 @@
 
     img {
       width: 100%;
-      height: auto;
+      height: 60vh;
       object-fit: cover;
       display: block;
       transition: .4s ease;
@@ -145,7 +145,7 @@
       &.active {
         svg {
           path {
-            fill: red;
+            fill: #c42b1c;
           }
         }
       }
@@ -196,7 +196,11 @@
 @media (max-width: 700px) {
   .product-card {
     gap: 1vw;
-
+    &__img{
+      img{
+        height: 35vh;
+      }
+    }
     &__title,
     &__price {
       font-size: 13px;

@@ -34,14 +34,14 @@ export default function OffcanvasHeader(){
                 <div className="offcanvas-body">
                     <div className='menu'>
                         <div className='logo-container'>
-                            <div className='name'>
+                            <Link href={'/'} onClick={(e) => handleLinkClick(e, '/')} className='name'>
                                 <img src='/BOVE_LOGO.svg' />
-                            </div>
+                            </Link>
                         </div>
                         <Link className='link-close' href='/catalog' onClick={(e) => handleLinkClick(e, '/catalog')}>Каталог</Link>
-                        <Link className='link-close' href=''  onClick={(e) => handleLinkClick(e, '')}>О бренде</Link>
-                        <Link className='link-close' href=''  onClick={(e) => handleLinkClick(e, '')}>Контакты</Link>
-                        <Link className='link-close' href=''  onClick={(e) => handleLinkClick(e, '')}>Блог стилиста</Link>
+                        <Link className='link-close' href='/about'  onClick={(e) => handleLinkClick(e, '/about')}>О бренде</Link>
+                        <Link className='link-close' href='/contacts'  onClick={(e) => handleLinkClick(e, '/contacts')}>Контакты</Link>
+                        <Link className='link-close' href='/info'  onClick={(e) => handleLinkClick(e, '/info')}>Блог стилиста</Link>
                         <Link className='link-close' href=''  onClick={(e) => handleLinkClick(e, '')}>Информация</Link>
                     </div>
                 </div>

@@ -44,7 +44,7 @@ export default function About() {
                 height={1000}
                 alt="О бренде BOVE"
               />
-              <Link href="">
+              <Link href="/about">
                 Подробнее о нас
                 <svg
                   width="40"

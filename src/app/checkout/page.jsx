@@ -21,6 +21,7 @@ export default function CheckoutPage() {
   const [selectedPoint, setSelectedPoint] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState({});
+  const [agreed, setAgreed] = useState(false);
 
   const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
   const deliveryCost =
@@ -161,7 +162,8 @@ export default function CheckoutPage() {
   formData.email.trim().length > 0 &&
   /^\S+@\S+\.\S+$/.test(formData.email) &&
   formData.address.trim().length > 0 &&
-  deliveryMethod.trim().length > 0;
+  deliveryMethod.trim().length > 0 &&
+  agreed;;
   return (
     <div className="checkout-page">
       <h1>Оформление заказа</h1>
@@ -280,7 +282,22 @@ export default function CheckoutPage() {
 
 
             </div>
-
+<div className="form-group checkout-agreement">
+  <label>
+    <span>
+    <input
+      type="checkbox"
+      checked={agreed}
+      onChange={(e) => setAgreed(e.target.checked)}
+    />
+      Я согласен с{" "}
+      <a href="/docs/политика_конфиденциальности.pdf" target="_blank" rel="noopener noreferrer">
+        политикой конфиденциальности
+      </a>
+      *
+    </span>
+  </label>
+</div>
             <button
               type="submit"
               className="submit-order-btn"

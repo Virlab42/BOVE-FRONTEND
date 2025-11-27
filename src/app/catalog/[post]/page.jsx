@@ -1,7 +1,7 @@
 import ProductPage from "./ProductPage";
 
-const BASE_URL = "https://api.bove-brand.ru";
 
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 // ======== Server Fetch ========
 async function getProduct(productId) {
   const res = await fetch(`${BASE_URL}/productsV3/${productId}`, {
