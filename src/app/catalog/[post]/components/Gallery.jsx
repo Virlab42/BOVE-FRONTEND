@@ -17,7 +17,6 @@ import "lightgallery/css/lg-thumbnail.css";
 import Image from "next/image";
 
 export default function Gallery({ images }) {
-  if (!images?.length) return null;
 
   const [isMobile, setIsMobile] = useState(false);
 
@@ -28,6 +27,7 @@ export default function Gallery({ images }) {
     window.addEventListener("resize", checkScreen);
     return () => window.removeEventListener("resize", checkScreen);
   }, []);
+  if (!images?.length) return null;
 
   return (
     <LightGallery
