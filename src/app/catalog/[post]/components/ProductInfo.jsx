@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { useCart } from "@/context/CartContext";
 
-const BASE_URL = "http://5.129.246.215:8000";
+const BASE_URL = "https://api.bove-brand.ru";
 
 function slugifyTranslit(productName, colorName, id) {
   const translitMap = {
@@ -36,11 +36,12 @@ function slugifyTranslit(productName, colorName, id) {
 }
 
 function parseVariantImages(variant) {
-  // variant.image может быть: null, "a.jpg" или "a.jpg,b.jpg" или уже массив
   if (!variant) return [];
   const raw = variant.image ?? variant.images ?? "";
   if (Array.isArray(raw)) {
-    return raw.map((p) => `${BASE_URL}/${p}`.replace(/\/\/+/g, "/").replace("http:/", "http://"));
+    return raw.map((p) =>
+      `${BASE_URL}/${p}`.replace(/\/\/+/g, "/").replace("http:/", "http://")
+    );
   }
   if (typeof raw === "string" && raw.trim() !== "") {
     return raw
@@ -59,22 +60,53 @@ export default function ProductInfo({
   onOpenSizeGuide,
 }) {
   const { add } = useCart();
+  console.log(product);
 
+  // product may be undefined briefly — guard
   const {
     id,
     full_name,
     base_price,
+    description,
+    composition_material,
     variants = [],
     product_stock = [],
+    // two possible shapes: available_sizes (array of objects) OR available_sizes_id (string)
+    available_sizes,
+    available_sizes_id,
   } = product || {};
 
-  // safety: если product_stock пустой — allSizeIds пустой массив
+  // --- Build size map: id -> label (e.g. 4 -> "S-M") ---
+  // Handle multiple shapes:
+  // - product.available_sizes = [{id: 4, size: "S-M"}, ...]
+  // - product.available_sizes_id = "[1,2]" (legacy) => fallback to id->id label
+  const sizeMap = {};
+  if (Array.isArray(available_sizes) && available_sizes.length > 0) {
+    available_sizes.forEach((s) => {
+      if (s && (s.id ?? s.size)) sizeMap[s.id] = s.size ?? String(s.id);
+    });
+  } else if (typeof available_sizes_id === "string") {
+    try {
+      const arr = JSON.parse(available_sizes_id);
+      if (Array.isArray(arr)) {
+        arr.forEach((idVal) => {
+          sizeMap[idVal] = String(idVal); // no labels available — fallback to id string
+        });
+      }
+    } catch {
+      // ignore parse errors
+    }
+  }
+
+  // --- get all size ids present in product_stock (unique) ---
   const allSizeIds = [...new Set((product_stock || []).map((s) => s.size_id))];
 
-  // sizesWithQty для текущего варианта
+  // compute sizesWithQty for the currently active variant
+  const activeVariantId = activeVariant?.id ?? activeVariant?.variant_id ?? null;
+
   const sizesWithQty = allSizeIds.map((sizeId) => {
     const stock = (product_stock || []).find(
-      (s) => s.variant_id === (activeVariant?.id ?? activeVariant?.variant_id) && s.size_id === sizeId
+      (s) => s.variant_id === activeVariantId && s.size_id === sizeId
     );
     return {
       sizeId,
@@ -84,36 +116,36 @@ export default function ProductInfo({
 
   const variantIsOut = sizesWithQty.length === 0 || sizesWithQty.every((s) => s.quantity === 0);
 
-  // По умолчанию первый доступный размер
-  const initialSize = sizesWithQty.find((s) => s.quantity > 0)?.sizeId ?? null;
-  const [selectedSize, setSelectedSize] = useState(initialSize);
+  // default initial size id (the id, not label)
+  const defaultSizeId = sizesWithQty.find((s) => s.quantity > 0)?.sizeId ?? null;
+  const [selectedSizeId, setSelectedSizeId] = useState(defaultSizeId);
 
+  // when activeVariant or availability changes, reset selected size to first available
   useEffect(() => {
-    const firstAvailable = sizesWithQty.find((s) => s.quantity > 0)?.sizeId ?? null;
-    setSelectedSize(firstAvailable);
+    setSelectedSizeId(sizesWithQty.find((s) => s.quantity > 0)?.sizeId ?? null);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeVariant?.id]);
+  }, [activeVariantId]);
 
-  // Получаем массив картинок для activeVariant (с BASE_URL)
+  // variant images
   const variantImages = parseVariantImages(activeVariant);
   const firstImage = variantImages[0] ?? null;
 
-  // Сборка URL
-  const url = `/catalog/${slugifyTranslit(full_name, activeVariant?.color ?? "", id)}?id=${id}&variant_id=${activeVariant?.id ?? activeVariant?.variant_id
-    }`;
+  // build product url
+  const url = `/catalog/${slugifyTranslit(full_name, activeVariant?.color ?? "", id)}?id=${id}&variant_id=${activeVariantId}`;
 
-  // === Добавление в корзину ===
+  // Add to cart: pass label for size (if available), else pass id
   const handleAddToCart = () => {
-    if (!selectedSize) return;
+    if (!selectedSizeId) return;
 
     add({
       id: id,
-      variant_id: activeVariant?.id ?? activeVariant?.variant_id,
+      variant_id: activeVariantId,
       title: full_name,
       price: activeVariant?.price ?? base_price,
       color: activeVariant?.color,
-      size: selectedSize,
-      image: firstImage, // безопасно: может быть null
+      // pass readable label:
+      size: sizeMap[selectedSizeId] ?? selectedSizeId,
+      image: firstImage, // can be null
       url,
     });
   };
@@ -134,7 +166,7 @@ export default function ProductInfo({
           {variants.map((v) => (
             <div
               key={v.id}
-              className={`color-swatch ${activeVariant?.id === v.id ? "active" : ""}`}
+              className={`color-swatch ${activeVariantId === v.id ? "active" : ""}`}
               style={{ backgroundColor: v.hex_color }}
               onClick={() => setActiveVariant(v)}
             />
@@ -150,11 +182,11 @@ export default function ProductInfo({
             {sizesWithQty.map(({ sizeId, quantity }) => (
               <button
                 key={sizeId}
-                className={`size-btn ${selectedSize === sizeId ? "active" : ""}`}
+                className={`size-btn ${selectedSizeId === sizeId ? "active" : ""}`}
                 disabled={quantity === 0}
-                onClick={() => quantity > 0 && setSelectedSize(sizeId)}
+                onClick={() => quantity > 0 && setSelectedSizeId(sizeId)}
               >
-                {sizeId}
+                {sizeMap[sizeId] ?? sizeId}
               </button>
             ))}
           </div>
@@ -165,11 +197,14 @@ export default function ProductInfo({
       <div className="size-guide-link" onClick={onOpenSizeGuide}>
         Таблица размеров
       </div>
-
+      {description ? <div>{description}</div> : ''}
+      <div>Состав:<br></br>
+      {composition_material}
+      </div>
       {/* ==== Кнопка "в корзину" ==== */}
       <button
         className="add-cart"
-        disabled={!selectedSize || variantIsOut}
+        disabled={!selectedSizeId || variantIsOut}
         onClick={handleAddToCart}
       >
         {variantIsOut ? "Нет в наличии" : "Добавить в корзину"}

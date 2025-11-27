@@ -15,11 +15,31 @@ export default function Categories() {
         <section className='categories-container'>
             <Swiper
                 modules={[Autoplay]}
-                slidesPerView={4}
-                spaceBetween={20}
+                breakpoints={{
+                    360: {
+                        slidesPerView: 2,
+                        spaceBetween: 10,
+                    },
+                    768: {
+                        slidesPerView: 2,
+                        spaceBetween: 10,
+                    },
+                    800: {
+                        slidesPerView: 3,
+                        spaceBetween: 10,
+                    },
+                    1440: {
+                        slidesPerView: 4,
+                        spaceBetween: 15,
+                    },
+                    1920: {
+                        slidesPerView: 4,
+                        spaceBetween: 20,
+                    },
+                }}
                 loop={true}
                 autoplay={{
-                    delay: 2000,
+                    delay: 3000,
                     disableOnInteraction: false,
                 }}
                 className='categories-card-container'
@@ -28,7 +48,7 @@ export default function Categories() {
                     <SwiperSlide key={c.id}>
                         <Link href={`/catalog?cat=${c.id}`} className='categories-card'>
                             <Image
-                                src={`http://5.129.246.215:8000/${c.category_image}`}
+                                src={`https://api.bove-brand.ru/${c.category_image}`}
                                 width={1000}
                                 height={1000}
                                 alt={c.name}

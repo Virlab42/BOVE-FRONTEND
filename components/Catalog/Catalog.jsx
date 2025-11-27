@@ -3,7 +3,7 @@ import Link from "next/link";
 import "./Catalog.scss";
 import { useState, useEffect } from "react";
 import { useCategories } from "@/hooks/useCategories"
-import { useSearchParams } from "next/navigation";
+import Image from "next/image";
 
 function buildProductUrl(productName, colorName, id) {
   const translitMap = {
@@ -44,6 +44,8 @@ export default function Catalog({ initialCat }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+
   const { data } = useCategories()
 
   // === НОРМАЛИЗАЦИЯ ВАРИАНТОВ ===============================================
@@ -81,7 +83,7 @@ export default function Catalog({ initialCat }) {
       try {
         setLoading(true);
 
-        const res = await fetch("http://5.129.246.215:8000/productsV2");
+        const res = await fetch("https://api.bove-brand.ru/productsV3");
         if (!res.ok) throw new Error("Ошибка загрузки товаров");
 
         const data = await res.json();
@@ -120,13 +122,14 @@ export default function Catalog({ initialCat }) {
       category_id: p.category_id,
       price: p.base_price,
       color: v.color,
+      name_for_colors: v.name_for_colors,
       hex_color: v.hex_color,
       images: v.images,
     }))
   );
 
   const getProductImage = (product) => {
-    if (product.images?.length) return "http://5.129.246.215:8000/" + product.images[0];
+    if (product.images?.length) return "https://api.bove-brand.ru/" + product.images[0];
     return "/placeholder.jpg";
   };
 
@@ -142,19 +145,32 @@ export default function Catalog({ initialCat }) {
 
       {/* Мобильный фильтр */}
       <div className="catalog__filter__mob">
-        <ul>
-          {data?.categories?.map((c) => (
-            <li
-              key={c.id}
-              className={c.id === selectedCat ? "active" : ""}
-              onClick={() =>
-                setSelectedCat(c.id === selectedCat ? null : c.id)
-              }
-            >
-              {c.name}
-            </li>
-          ))}
-        </ul>
+        <div>
+
+  {isFilterOpen && (
+    <ul className="filter-list" >
+      {data?.categories?.map((c) => (
+        <li
+          key={c.id}
+          className={c.id === selectedCat ? "active" : ""}
+          onClick={() => {
+            setSelectedCat(c.id === selectedCat ? null : c.id);
+            setIsFilterOpen(false); 
+          }}
+        >
+          {c.name}
+        </li>
+      ))}
+    </ul>
+  )}
+        <button
+    className="filter-toggle"
+    onClick={() => setIsFilterOpen((prev) => !prev)}
+  >
+    <svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024"><title>Menu-unfold-outlined SVG Icon</title><path fill="currentColor" d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8m-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8m0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8M142.4 642.1L298.7 519a8.84 8.84 0 0 0 0-13.9L142.4 381.9c-5.8-4.6-14.4-.5-14.4 6.9v246.3a8.9 8.9 0 0 0 14.4 7"/></svg>
+    Категории
+    {selectedCat && <span className="selected-dot" />}
+  </button></div>
 
         <select value={sortType} onChange={(e) => setSortType(e.target.value)}>
           <option value="new">Сначала новинки</option>
@@ -190,7 +206,7 @@ export default function Catalog({ initialCat }) {
               key={`${product.product_id}-${product.color}`}
             >
               <div className="product-card__img">
-                <img
+                <Image width={1000} height={1000}
                   src={getProductImage(product)}
                   alt={product.full_name}
                 />
@@ -216,7 +232,7 @@ export default function Catalog({ initialCat }) {
                 </button>
               </div>
 
-              <div className="product-card__title">{product.full_name}</div>
+              <div className="product-card__title">{product.full_name} {product.name_for_colors}</div>
               <div className="product-card__price">
                 {parseInt(product.price)} ₽
               </div>

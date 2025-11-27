@@ -14,6 +14,7 @@ import "swiper/css/pagination";
 import "lightgallery/css/lightgallery.css";
 import "lightgallery/css/lg-zoom.css";
 import "lightgallery/css/lg-thumbnail.css";
+import Image from "next/image";
 
 export default function Gallery({ images }) {
   if (!images?.length) return null;
@@ -53,7 +54,7 @@ export default function Gallery({ images }) {
           {images.map((src, i) => (
             <SwiperSlide key={i}>
               <a href={src} className="lg-item" data-src={src}>
-              <img src={src} alt={`${i + 1}/${images.length}`} />
+              <Image width={2000} height={2000} src={src} alt={`${i + 1}/${images.length}`} />
             </a>
             </SwiperSlide>
           ))}
@@ -73,7 +74,7 @@ export default function Gallery({ images }) {
       {/* Главное изображение */}
       <a href={images[0]} data-src={images[0]}>
         <div className="gallery__main">
-          <img src={images[0]} alt={`1/${images.length}`} />
+          <Image width={2000} height={2000} src={images[0]} alt={`1/${images.length}`} />
         </div>
       </a>
 
@@ -81,7 +82,7 @@ export default function Gallery({ images }) {
       <div className="gallery__grid">
         {images.slice(1).map((src, i) => (
           <a href={src} data-src={src} key={i}>
-            <img src={src} alt={`${i + 2}/${images.length}`} />
+            <Image width={2000} height={2000} src={src} alt={`${i + 2}/${images.length}`} />
           </a>
         ))}
       </div>

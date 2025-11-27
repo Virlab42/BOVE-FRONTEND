@@ -1,10 +1,10 @@
 import ProductPage from "./ProductPage";
 
-const BASE_URL = "http://5.129.246.215:8000";
+const BASE_URL = "https://api.bove-brand.ru";
 
 // ======== Server Fetch ========
 async function getProduct(productId) {
-  const res = await fetch(`${BASE_URL}/productsV2/${productId}`, {
+  const res = await fetch(`${BASE_URL}/productsV3/${productId}`, {
     next: { revalidate: 30 },
   });
 

@@ -32,31 +32,6 @@ export default function CheckoutPage() {
           ? 800 // базовая цена, при желании можно уточнять
           : 0;
 
-  const loadCdekPoints = async () => {
-    if (deliveryMethod !== "cdek") return;
-
-    setIsLoading(true);
-    try {
-      const response = await fetch("/api/cdek", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          city: "Москва",
-        }),
-      });
-
-      const data = await response.json();
-      if (data.success) {
-        setDeliveryPoints(data.points);
-      }
-    } catch (error) {
-      console.error("Ошибка загрузки пунктов выдачи:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   useEffect(() => {
     const phoneInput = document.querySelector("input[name='phone']");
@@ -66,9 +41,6 @@ export default function CheckoutPage() {
     }
   }, []);
 
-  useEffect(() => {
-    loadCdekPoints();
-  }, [deliveryMethod]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -112,9 +84,6 @@ export default function CheckoutPage() {
       newErrors.email = "Введите корректный email";
     }
 
-    if (deliveryMethod === "cdek" && !selectedPoint) {
-      newErrors.delivery = "Выберите пункт выдачи";
-    }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -279,7 +248,7 @@ export default function CheckoutPage() {
                   <div className="delivery-info">
                     <span className="delivery-title">Доставка СДЭК</span>
                     <span className="delivery-desc">
-                      Доставим в ближайший к вам пункт выдачи
+                      Доставим в ближайший к вам пункт выдачи. Доставка оплачивается отдельно при получении.
                     </span>
                     <span className="delivery-price">от 300 ₽</span>
                   </div>
@@ -351,7 +320,7 @@ export default function CheckoutPage() {
             <hr />
             <div className="total-row final-total">
               <span>Итого:</span>
-              <span>{total + deliveryCost} ₽</span>
+              <span>{total} ₽</span>
             </div>
           </div>
         </div>
