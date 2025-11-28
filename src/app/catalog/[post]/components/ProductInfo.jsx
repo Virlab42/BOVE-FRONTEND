@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useCart } from "@/context/CartContext";
+import { useFavourite } from "@/context/FavouriteContext";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 function slugifyTranslit(productName, colorName, id) {
@@ -59,6 +60,7 @@ export default function ProductInfo({
   onOpenSizeGuide,
 }) {
   const { add } = useCart();
+  const { toggleFavourite, isFavourite } = useFavourite();
   console.log(product);
 
   // product may be undefined briefly — guard
@@ -198,16 +200,46 @@ export default function ProductInfo({
       </div>
       {description ? <div>{description}</div> : ''}
       <div>Состав:<br></br>
-      {composition_material}
+        {composition_material}
       </div>
       {/* ==== Кнопка "в корзину" ==== */}
-      <button
-        className="add-cart"
-        disabled={!selectedSizeId || variantIsOut}
-        onClick={handleAddToCart}
-      >
-        {variantIsOut ? "Нет в наличии" : "Добавить в корзину"}
-      </button>
+      <div className="cart-favourite">
+        <button
+          className="add-cart"
+          disabled={!selectedSizeId || variantIsOut}
+          onClick={handleAddToCart}
+        >
+          {variantIsOut ? "Нет в наличии" : "Добавить в корзину"}
+        </button>
+        <button
+          className="favourite-button"
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            toggleFavourite({
+              id: activeVariantId,
+              name: full_name,
+              colorName: activeVariant?.color,
+              img: firstImage,
+              productId: id,
+              price: activeVariant?.price ?? base_price
+            });
+          }}
+        >
+
+          {isFavourite(activeVariantId) ? (
+            // заполненное сердечко
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+              <path fill="#c42b1c" stroke="#c42b1c" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16C1 12 2 6 7 4s8 2 9 4c1-2 5-6 10-4s5 8 2 12s-12 12-12 12s-9-8-12-12" />
+            </svg>
+          ) : (
+            // пустое сердечко
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+              <path fill="none" stroke="#42424299" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16C1 12 2 6 7 4s8 2 9 4c1-2 5-6 10-4s5 8 2 12s-12 12-12 12s-9-8-12-12" />
+            </svg>
+          )}
+        </button>
+      </div>
     </div>
   );
 }

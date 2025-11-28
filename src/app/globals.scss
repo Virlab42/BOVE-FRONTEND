@@ -25,12 +25,37 @@ a {
   text-decoration: none;
 }
 
-section{
+section {
   padding-left: 40px;
   padding-right: 40px;
-  @media screen and (max-width: 700px){
+
+  @media screen and (max-width: 700px) {
     padding-left: 2vw;
     padding-right: 2vw;
+  }
+}
+
+.favourite-button {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: fit-content;
+  height: fit-content;
+  padding: 10px;
+  background-color: transparent;
+  border: none;
+
+  svg {
+    position: relative !important;
+    width: 24px;
+    height: auto;
+    path{
+      transition: .3s ease;
+      -webkit-transition: .3s ease;
+      -moz-transition: .3s ease;
+      -ms-transition: .3s ease;
+      -o-transition: .3s ease;
+}
   }
 }
 
@@ -40,7 +65,7 @@ section{
   }
 }
 
-.link-more{
+.link-more {
   display: flex;
   position: relative;
   font-family: inherit;
@@ -54,14 +79,17 @@ section{
   transition: .3s;
   overflow: hidden;
   margin-right: 8%;
-  span{
+
+  span {
     z-index: 1;
   }
-  svg{
+
+  svg {
     transition: transform .3s ease;
   }
 }
-.link-more::before{
+
+.link-more::before {
   content: "";
   display: block;
   position: absolute;
@@ -73,14 +101,17 @@ section{
   background-color: black;
   z-index: 0;
 }
-.link-more:hover{
+
+.link-more:hover {
   color: white;
+
   //border: 1px solid #EEEEEE;
-  svg{
+  svg {
     transform: scaleX(1.2);
   }
 }
-.link-more:hover::before{
+
+.link-more:hover::before {
   content: "";
   display: block;
   z-index: 0;
@@ -89,12 +120,14 @@ section{
   height: 100%;
   background-color: black;
 }
-@media(max-width:992px){
-  .link-more{
+
+@media(max-width:992px) {
+  .link-more {
     display: flex;
     padding: 6px 25px;
     font-size: 14px;
-    svg{
+
+    svg {
       transition: transform .3s ease;
       height: 26px;
     }

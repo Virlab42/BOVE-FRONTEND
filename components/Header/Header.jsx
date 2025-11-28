@@ -6,9 +6,11 @@ import Image from 'next/image';
 import OffcanvasHeader from '../OffcanvasHeader/OffcanvasHeader';
 import './Header.scss'
 import { useCart } from "@/context/CartContext";
+import { useFavourite } from "@/context/FavouriteContext";
 
 export default function Header() {
     const { cart } = useCart();
+    const { favourites } = useFavourite();
 
     const pathname = usePathname();
     const openButtonRef = useRef(null);
@@ -70,7 +72,7 @@ export default function Header() {
                     <Link href='/catalog'>Каталог</Link>
                     <Link href='/about'>О бренде</Link>
                     <Link href='/contacts'>Контакты</Link>
-                    <Link href=''>Блог стилиста</Link>
+                    <Link href='/blog'>Блог стилиста</Link>
                     <Link href='/info'>Информация</Link>
                 </div>
                 <Link href='/' className='logo-container'>
@@ -87,7 +89,7 @@ export default function Header() {
                     </div>
                 </Link>
                 <div className='menu'>
-                    <Link className='header-profile' href=''>
+                    <Link className='header-profile' href='/favourites'>
                         <svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <g clipPath="url(#clip0_638_31)">
                                 <path d="M19.2636 2.89688C16.4636 2.23334 14.0032 3.86771 13.0584 5.01146L12.4939 5.69584L11.9303 5.01146C10.9886 3.8698 8.48865 2.24167 5.72719 2.89688C4.32302 3.22917 3.19177 3.97084 2.45219 5.05C1.7126 6.12813 1.3251 7.60521 1.52094 9.48021C1.68031 11.0281 2.45115 12.5885 3.49281 14.0427C4.52719 15.4917 5.78865 16.7781 6.85427 17.7719C8.80948 19.5948 10.4834 20.7479 12.4959 22.0031C14.5209 20.7448 16.2314 19.6125 18.1626 17.7771C20.5293 15.525 23.073 12.626 23.4709 9.46459C23.8876 6.15417 22.0293 3.55105 19.2626 2.89584L19.2636 2.89688ZM12.4939 3.4625C13.9084 2.14584 16.5564 0.722921 19.598 1.4448C23.1397 2.28334 25.4366 5.62917 24.9314 9.65313C24.4584 13.4021 21.5189 16.6271 19.1689 18.8646C17.0022 20.925 15.0886 22.1479 12.8772 23.5146L12.4939 23.75L12.1126 23.5146C9.88969 22.1396 8.03761 20.9031 5.85948 18.8688C4.7626 17.8448 3.41885 16.4823 2.30115 14.9198C1.18969 13.3646 0.256354 11.5521 0.0584376 9.63855C-0.166562 7.46667 0.270938 5.61875 1.24385 4.19792C2.21677 2.77709 3.68031 1.84896 5.39281 1.44375C8.39802 0.731255 11.0699 2.14584 12.4939 3.4625Z" fill="white" />
@@ -98,6 +100,7 @@ export default function Header() {
                                 </clipPath>
                             </defs>
                         </svg>
+                        {favourites.length > 0 && <div className="badge">{favourites.length}</div>}
                         <span>Избранное</span>
                     </Link>
                     <Link className='header-profile' href='/cart'>

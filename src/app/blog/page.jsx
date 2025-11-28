@@ -1,42 +1,24 @@
 // src/MainBlog.js
 import BlogComponent from '../../../components/Blog/Blog';
+import './MainBlog.scss'
+import './blog.scss'
 
 export const metadata = {
-    title: "Блог о дизайне интерьера и архитектуре домов",
-    description: "Читайте актуальные статьи о трендах в дизайне интерьера и архитектуре загородных домов. Вдохновляйтесь!",
+    title: "Блог BOVE",
+    description: "",
     alternates: {
-      canonical: 'https://alyakina.ru/blog'
+      canonical: 'https://'
     },
     keywords: [
-      'блог об архитектуре',
-      'блог о дизайне интерьеров',
-      'советы по дизайну',
-      'идеи для интерьера',
-      'тренды в архитектуре',
-      'тренды в дизайне',
-      'уникальные интерьеры',
-      'дизайн квартиры',
-      'дизайн дома',
-      'архитектурные проекты',
-      'как создать интерьер',
-      'статьи о дизайне',
-      'статьи об архитектуре',
-      'современный дизайн интерьеров',
-      'вдохновение для интерьера',
-      'блог дизайн интерьера',
-      'тренды архитектуры',
-      'загородные дома',
-      'современный дизайн',
-      'идеи интерьера',
     ],
     openGraph: {
-      title: "Блог о дизайне интерьера и архитектуре домов",
-      description: "Читайте актуальные статьи о трендах в дизайне интерьера и архитектуре загородных домов. Вдохновляйтесь!",
-      url: `https://alyakina.ru/blog`,
+      title: "Блог BOVE",
+      description: "",
+      url: `https://`,
       images: [
           {
-              url: `/favicon/favicon-96x96.png`,
-              alt: 'Студия Софии Алякиной',
+              url: ``,
+              alt: '',
           },
       ],
   },
@@ -45,7 +27,11 @@ export const metadata = {
 export default function MainBlog(){
     return (
         <>
-            <BlogComponent />
+            <section className='blog'>
+              <h1>Блог</h1>
+              <h3>Скоро здесь появятся новости и статьи</h3>
+              {/* <BlogComponent /> */}
+            </section>
         </>
         
     );

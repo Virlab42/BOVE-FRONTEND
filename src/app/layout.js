@@ -7,6 +7,7 @@ import ModalForm from "../../components/ModalForm/ModalForm";
 import Confidentiality from "../../components/Confidentiality/confidentiality";
 import YandexMetrika from "../../components/YandexMetrika/YandexMEtrika";
 import { CartProvider } from '@/context/CartContext';
+import { FavouriteProvider } from '@/context/FavouriteContext';
 
 export const metadata = {
   icons: {
@@ -35,8 +36,10 @@ export default function RootLayout({ children }) {
       <body>
         <Bootstrap />
         <CartProvider>
-        <Header />
-          {children}
+          <FavouriteProvider>
+            <Header />
+            {children}
+          </FavouriteProvider>
         </CartProvider>
         <Footer />
         {/* <ModalForm /> */}

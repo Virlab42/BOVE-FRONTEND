@@ -14,7 +14,7 @@ function Footer(){
                       <Link href='/catalog' className="nav-link">Каталог</Link>
                       <Link href='/about' className="nav-link">О бренде</Link>
                       <Link href='/contacts' className="nav-link">Контакты</Link>
-                      <Link href='' className="nav-link">Блог стилиста</Link>
+                      <Link href='/blog' className="nav-link">Блог стилиста</Link>
                       <Link href='/info' className="nav-link">Информация</Link>
                     </div>
                   <div className='nav-contacts'>

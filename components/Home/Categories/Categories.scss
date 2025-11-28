@@ -3,11 +3,26 @@
 .categories-container {
     display: flex;
     flex-direction: column;
-    padding-top: 80px;
+    padding-top: 60px;
     padding-bottom: 80px;
     gap: 20px;
     background-color: white;
-
+    .categories-controls{
+        display: flex;
+        flex-direction: row;
+        gap: 15px;
+        justify-content: flex-end;
+        button{
+            color: black;
+            background-color: transparent;
+            border: none;
+            padding: 5px 0;
+            svg{
+                width: 30px;
+                height: auto;
+            }
+        }
+    }
     .categories-card-container {
         //display: flex;
         //flex-direction: row;
@@ -94,6 +109,23 @@
     .categories-container{
         padding-top: 20px;
         padding-bottom: 40px;
+        gap: 5px;
+    .categories-controls{
+        display: flex;
+        flex-direction: row;
+        gap: 10px;
+        justify-content: flex-end;
+        button{
+            color: black;
+            background-color: transparent;
+            border: none;
+            padding: 5px 0;
+            svg{
+                width: 22px;
+                height: auto;
+            }
+        }
+    }
         .categories-card-container{
             gap: 2vw;
             flex-wrap: wrap;

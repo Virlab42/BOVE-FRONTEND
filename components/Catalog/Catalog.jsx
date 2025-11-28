@@ -4,6 +4,7 @@ import "./Catalog.scss";
 import { useState, useEffect } from "react";
 import { useCategories } from "@/hooks/useCategories"
 import Image from "next/image";
+import { useFavourite } from "@/context/FavouriteContext";
 
 function buildProductUrl(productName, colorName, id) {
   const translitMap = {
@@ -47,6 +48,7 @@ export default function Catalog({ initialCat }) {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   const { data } = useCategories()
+  const { toggleFavourite, isFavourite } = useFavourite();
 
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
   // === НОРМАЛИЗАЦИЯ ВАРИАНТОВ ===============================================
@@ -148,30 +150,30 @@ export default function Catalog({ initialCat }) {
       <div className="catalog__filter__mob">
         <div>
 
-  {isFilterOpen && (
-    <ul className="filter-list" >
-      {data?.categories?.map((c) => (
-        <li
-          key={c.id}
-          className={c.id === selectedCat ? "active" : ""}
-          onClick={() => {
-            setSelectedCat(c.id === selectedCat ? null : c.id);
-            setIsFilterOpen(false); 
-          }}
-        >
-          {c.name}
-        </li>
-      ))}
-    </ul>
-  )}
-        <button
-    className="filter-toggle"
-    onClick={() => setIsFilterOpen((prev) => !prev)}
-  >
-    <svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024"><title>Menu-unfold-outlined SVG Icon</title><path fill="currentColor" d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8m-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8m0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8M142.4 642.1L298.7 519a8.84 8.84 0 0 0 0-13.9L142.4 381.9c-5.8-4.6-14.4-.5-14.4 6.9v246.3a8.9 8.9 0 0 0 14.4 7"/></svg>
-    Категории
-    {selectedCat && <span className="selected-dot" />}
-  </button></div>
+          {isFilterOpen && (
+            <ul className="filter-list" >
+              {data?.categories?.map((c) => (
+                <li
+                  key={c.id}
+                  className={c.id === selectedCat ? "active" : ""}
+                  onClick={() => {
+                    setSelectedCat(c.id === selectedCat ? null : c.id);
+                    setIsFilterOpen(false);
+                  }}
+                >
+                  {c.name}
+                </li>
+              ))}
+            </ul>
+          )}
+          <button
+            className="filter-toggle"
+            onClick={() => setIsFilterOpen((prev) => !prev)}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024"><title>Menu-unfold-outlined SVG Icon</title><path fill="currentColor" d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8m-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8m0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8M142.4 642.1L298.7 519a8.84 8.84 0 0 0 0-13.9L142.4 381.9c-5.8-4.6-14.4-.5-14.4 6.9v246.3a8.9 8.9 0 0 0 14.4 7" /></svg>
+            Категории
+            {selectedCat && <span className="selected-dot" />}
+          </button></div>
 
         <select value={sortType} onChange={(e) => setSortType(e.target.value)}>
           <option value="new">Сначала новинки</option>
@@ -213,23 +215,32 @@ export default function Catalog({ initialCat }) {
                 />
 
                 <button
-                  className={`fav ${favorites.includes(product.product_id) ? "active" : ""}`}
+                  className="favourite-button"
                   onClick={(e) => {
                     e.preventDefault();
-                    toggleFav(product.product_id);
+                    e.stopPropagation();
+                    toggleFavourite({
+                      id: product.variant_id,
+                      name: product.full_name,
+                      colorName: product.color,
+                      img: getProductImage(product),
+                      productId: product.product_id,
+                      price: product.price
+                    });
                   }}
                 >
-                  <svg
-                    width="20"
-                    height="20"
-                    viewBox="0 0 20 20"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M15.411 2.31742C13.171..."
-                      fill="white"
-                    />
-                  </svg>
+
+                  {isFavourite(product.variant_id) ? (
+                    // заполненное сердечко
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+                      <path fill="#c42b1c" stroke="#c42b1c" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16C1 12 2 6 7 4s8 2 9 4c1-2 5-6 10-4s5 8 2 12s-12 12-12 12s-9-8-12-12" />
+                    </svg>
+                  ) : (
+                    // пустое сердечко
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+                      <path fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16C1 12 2 6 7 4s8 2 9 4c1-2 5-6 10-4s5 8 2 12s-12 12-12 12s-9-8-12-12" />
+                    </svg>
+                  )}
                 </button>
               </div>
 

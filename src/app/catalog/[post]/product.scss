@@ -141,6 +141,19 @@
     flex-direction: column;
     gap: 20px;
 
+      .cart-favourite{
+        position: relative;
+        display: flex;
+        flex-direction: row;
+        gap: 10px;
+        .add-cart{
+          flex: 1;
+        }
+        .favourite-button{
+          position: relative !important;
+          background-color: #e4e4e499;
+        }
+      }
     .title {
       font-size: 28px;
       margin-bottom: 0;
