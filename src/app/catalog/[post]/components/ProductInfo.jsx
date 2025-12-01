@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { useCart } from "@/context/CartContext";
 import { useFavourite } from "@/context/FavouriteContext";
+import Attendant from "./Attendant";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 function slugifyTranslit(productName, colorName, id) {
@@ -240,6 +241,7 @@ export default function ProductInfo({
           )}
         </button>
       </div>
+      <Attendant id={activeVariantId} />
     </div>
   );
 }

@@ -45,15 +45,15 @@ export default function Best() {
       try {
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/productsV2/popular`);
         const data = await res.json();
-
+        console.log(data);
         const products = data.products.map((p) => {
-          const images = JSON.parse(p.variant_image); // Преобразуем строку в массив
+          //const images = JSON.parse(p.variant_image); // Преобразуем строку в массив
           return {
             id: p.variant_id,
             name: p.product_full_name,
             colorName: p.name_for_colors,
-            price: `${p.product_base_price.toLocaleString("ru-RU")} ₽`,
-            img: images[0], // берем первую картинку
+            price: `${p.product_base_price > 0 ? p.product_base_price.toLocaleString("ru-RU") : "Скоро будет"} ₽`,
+            img: p.hit_image, // берем первую картинку
             productId: p.product_id
           };
         });

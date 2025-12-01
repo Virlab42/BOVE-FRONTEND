@@ -1,5 +1,36 @@
 @import '/public/const.scss';
 
+
+.related{
+  margin-top: 40px;
+  h2{
+    //font-size: 28px;
+    margin-bottom: 10px;
+  }
+  .related-swiper{
+    //overflow: visible;
+    .product-card{
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      line-height: 1;
+      &__price{
+        font-weight: 500;
+        color: $Vinous;
+      }
+      &__title{
+        overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+      }
+      img{
+        width: 100%;
+        object-fit: cover;
+        height: auto;
+      }
+    }
+  }
+}
 .product-swiper{
   width: 100%;
   .swiper-slide{
