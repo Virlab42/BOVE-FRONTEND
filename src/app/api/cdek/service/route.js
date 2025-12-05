@@ -59,6 +59,10 @@ class CDEKService {
         return await this.getOffices(requestData, time);
       case "calculate":
         return await this.calculate(requestData, time);
+        case "point":
+  if (!requestData.code) return this.sendValidationError("Code required");
+  const pointData = await this.getPointByCode(requestData.code, requestData.tariff);
+  return this.sendResponse({ result: JSON.stringify(pointData) }, time);
       default:
         return this.sendValidationError("Unknown action");
     }
@@ -253,6 +257,39 @@ class CDEKService {
 
     return this.sendResponse(result, startTime);
   }
+  async getPointByCode(code, tariff) {
+  // 1️⃣ Получаем все ПВЗ
+  const res = await this.httpRequest("deliverypoints", {}); 
+  const data = JSON.parse(res.result);
+//console.log("⚠ Все ПВЗ, пришедшие с CDEK:", data);
+  // API v2 может возвращать массив в data.items или data.points
+  const pointsList = data.items || data.points || [];
+  console.log("🔎 Ищем код ПВЗ:", code);
+pointsList.forEach(p => console.log("💬 ПВЗ код:", p.code));
+  const point = pointsList.find(p => String(p.code) === String(code));
+
+  if (!point) throw new Error("Пункт не найден");
+
+  // 2️⃣ Если нужен тариф — рассчитываем цену
+  let price = null;
+  if (tariff) {
+    const calcRes = await this.httpRequest(
+  "calculator/tarifflist",
+  {
+    tariff_code: tariff,
+    from_location: "Москва", // откуда отправляем
+    to_location: point.code, // код ПВЗ
+    goods: [{ weight: 0.1, length: 30, width: 30, height: 30 }],
+  },
+  false,
+  true
+);
+    const calcData = JSON.parse(calcRes.result);
+    price = calcData.tariffs?.[0]?.price || 0;
+  }
+
+  return { point, price };
+}
 }
 
 async function handleRequest(method, searchParams, body) {
