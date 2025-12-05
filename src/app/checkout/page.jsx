@@ -114,8 +114,7 @@ export default function CheckoutPage() {
         total: total,
         date: new Date().toISOString(),
       };
-      console.log(orderData);
-      const response = await fetch("/api/orders", {
+      const response = await fetch("/api/payment/create", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -126,9 +125,10 @@ export default function CheckoutPage() {
       const result = await response.json();
 
       if (result.success) {
-        clear();
-        const encodedOrder = encodeURIComponent(JSON.stringify(orderData));
-        router.push(`/order-success?orderId=${result.orderId}&data=${encodedOrder}`);
+        //clear();
+        //const encodedOrder = encodeURIComponent(JSON.stringify(orderData));
+        //router.push(`/order-success?orderId=${result.orderId}&data=${encodedOrder}`);
+        window.location.href = result.paymentUrl;
       } else {
         alert("Ошибка при оформлении заказа");
       }
