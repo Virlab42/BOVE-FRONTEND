@@ -22,8 +22,12 @@ export const metadata = {
   },
 };
 
-export default function Catalog({ searchParams }) {
-  const catFromUrl = searchParams.cat ? Number(searchParams.cat) : null;
+// Добавляем async к функции
+export default async function Catalog({ searchParams }) {
+  // Используем await для получения searchParams
+  const params = await searchParams;
+  const catFromUrl = params.cat ? Number(params.cat) : null;
+
   return (
     <>
       <CatalogClient initialCat={catFromUrl} />

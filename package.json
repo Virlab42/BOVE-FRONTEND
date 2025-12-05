@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@cdek-it/widget": "^3.11.1",
     "axios": "^1.7.9",
     "bootstrap": "^5.3.3",
     "inputmask": "^5.0.9",

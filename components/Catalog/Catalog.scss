@@ -1,4 +1,4 @@
-@import '/public/const.scss';
+@import "/public/const.scss";
 
 @keyframes listcat {
   0% {
@@ -37,6 +37,7 @@
   display: flex;
   gap: 40px;
   color: #000;
+  min-height: 100vh;
 
   &__filter,
   &__sort {
@@ -59,18 +60,18 @@
         font-weight: 400;
 
         &::after {
-          content: '';
+          content: "";
           position: absolute;
           background-color: black;
           bottom: 0;
           left: 0;
           height: 1px;
           width: 0;
-          transition: .4s ease;
-          -webkit-transition: .4s ease;
-          -moz-transition: .4s ease;
-          -ms-transition: .4s ease;
-          -o-transition: .4s ease;
+          transition: 0.4s ease;
+          -webkit-transition: 0.4s ease;
+          -moz-transition: 0.4s ease;
+          -ms-transition: 0.4s ease;
+          -o-transition: 0.4s ease;
         }
 
         &:hover::after {
@@ -114,11 +115,11 @@
       height: 60vh;
       object-fit: cover;
       display: block;
-      transition: .4s ease;
-      -webkit-transition: .4s ease;
-      -moz-transition: .4s ease;
-      -ms-transition: .4s ease;
-      -o-transition: .4s ease;
+      transition: 0.4s ease;
+      -webkit-transition: 0.4s ease;
+      -moz-transition: 0.4s ease;
+      -ms-transition: 0.4s ease;
+      -o-transition: 0.4s ease;
     }
 
     .fav {
@@ -134,11 +135,11 @@
 
       svg {
         path {
-          transition: .4s ease;
-          -webkit-transition: .4s ease;
-          -moz-transition: .4s ease;
-          -ms-transition: .4s ease;
-          -o-transition: .4s ease;
+          transition: 0.4s ease;
+          -webkit-transition: 0.4s ease;
+          -moz-transition: 0.4s ease;
+          -ms-transition: 0.4s ease;
+          -o-transition: 0.4s ease;
         }
       }
 
@@ -196,8 +197,8 @@
 @media (max-width: 700px) {
   .product-card {
     gap: 1vw;
-    &__img{
-      img{
+    &__img {
+      img {
         height: 35vh;
       }
     }
@@ -246,18 +247,18 @@
         width: 92vw;
         left: 4vw;
         right: 4vw;
-        animation: filter .4s ease;
-        -webkit-animation: filter .4s ease;
+        animation: filter 0.4s ease;
+        -webkit-animation: filter 0.4s ease;
 
         ul {
           padding: 7px !important;
-          animation: listcat .3s ease;
-          transition: .3s ease;
-          -webkit-transition: .3s ease;
-          -moz-transition: .3s ease;
-          -ms-transition: .3s ease;
-          -o-transition: .3s ease;
-          -webkit-animation: listcat .3s ease;
+          animation: listcat 0.3s ease;
+          transition: 0.3s ease;
+          -webkit-transition: 0.3s ease;
+          -moz-transition: 0.3s ease;
+          -ms-transition: 0.3s ease;
+          -o-transition: 0.3s ease;
+          -webkit-animation: listcat 0.3s ease;
         }
 
         .filter-toggle {
@@ -272,7 +273,7 @@
           color: black;
           font-size: 14px;
           font-weight: 500;
-          .selected-dot{
+          .selected-dot {
             position: absolute;
             right: -5px;
             top: 5px;
@@ -284,7 +285,7 @@
             -moz-border-radius: 50%;
             -ms-border-radius: 50%;
             -o-border-radius: 50%;
-}
+          }
           svg {
             height: 18px;
             width: auto;
@@ -319,18 +320,18 @@
             font-size: 14px;
 
             &::after {
-              content: '';
+              content: "";
               position: absolute;
               background-color: black;
               bottom: 0;
               left: 0;
               height: 1px;
               width: 0;
-              transition: .4s ease;
-              -webkit-transition: .4s ease;
-              -moz-transition: .4s ease;
-              -ms-transition: .4s ease;
-              -o-transition: .4s ease;
+              transition: 0.4s ease;
+              -webkit-transition: 0.4s ease;
+              -moz-transition: 0.4s ease;
+              -ms-transition: 0.4s ease;
+              -o-transition: 0.4s ease;
             }
 
             &:hover::after {

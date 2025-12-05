@@ -1,30 +1,172 @@
 @import "/public/const.scss";
 
+.cdek-widget-section {
+  width: 100% !important;
+}
+
+// Стили для загрузки iframe
+.widget-loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.95);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+
+  p {
+    margin-bottom: 15px;
+    color: #666;
+    font-size: 16px;
+  }
+
+  .loading-fallback-btn {
+    padding: 10px 20px;
+    background: transparent;
+    border: 1px solid #a50034;
+    color: #a50034;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background: #a50034;
+      color: white;
+    }
+  }
+}
+
+// Стили для выбранного пункта
+.selected-point-info {
+  margin-top: 20px;
+  padding: 20px;
+  border: 1px solid #d9d9d9;
+  background: #f9f9f9;
+
+  .selected-point-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+
+    h4 {
+      margin: 0;
+      color: #a50034;
+    }
+
+    .change-point-btn {
+      padding: 8px 16px;
+      background: transparent;
+      border: 1px solid #a50034;
+      color: #a50034;
+      cursor: pointer;
+      transition: all 0.3s ease;
+
+      &:hover {
+        background: #a50034;
+        color: white;
+      }
+    }
+  }
+
+  .selected-point-details {
+    p {
+      margin: 8px 0;
+      font-size: 14px;
+
+      strong {
+        color: #333;
+        font-weight: 600;
+      }
+    }
+  }
+}
+
+// Стили для простого селектора
+.point-item {
+  border: 1px solid #d9d9d9;
+  padding: 15px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &.selected {
+    border-color: #a50034;
+    background: rgba(165, 0, 52, 0.05);
+  }
+
+  &:hover {
+    border-color: #a50034;
+  }
+
+  .point-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+
+    input[type="radio"] {
+      margin: 0;
+    }
+
+    .point-name {
+      flex: 1;
+      font-weight: 600;
+    }
+
+    .point-price {
+      color: #a50034;
+      font-weight: 600;
+    }
+  }
+
+  .point-details {
+    font-size: 14px;
+    color: #666;
+
+    .point-address {
+      margin-bottom: 5px;
+    }
+
+    .point-period {
+      margin-bottom: 5px;
+    }
+
+    .point-description {
+      font-size: 13px;
+      color: #888;
+    }
+  }
+}
+
 .checkout-page {
   padding: 125px 15vw 80px 15vw;
   min-height: 100vh;
-  @media screen and (max-width: 1440px){
+  @media screen and (max-width: 1440px) {
     padding: 125px 10vw 80px 10vw;
   }
-  @media screen and (max-width: 1200px){
+  @media screen and (max-width: 1200px) {
     padding: 125px 5vw 80px 5vw;
   }
-  @media screen and (max-width: 700px){
+  @media screen and (max-width: 700px) {
     padding: 80px 3vw 80px 3vw;
-    h1{
+    h1 {
       margin-bottom: 3vw !important;
       font-size: 24px !important;
     }
-    .order-summary{
+    .order-summary {
       position: relative !important;
       top: auto !important;
       width: 100%;
       padding: 5vw !important;
     }
-    .form-section{
+    .form-section {
       padding: 5vw !important;
     }
-    .checkout-content{
+    .checkout-content {
       display: flex !important;
       flex-direction: column-reverse;
       gap: 3vw !important;
@@ -35,22 +177,22 @@
     font-size: 40px;
     text-align: left;
   }
-  .checkout-agreement{
+  .checkout-agreement {
     display: flex;
     flex-direction: row;
     align-items: center;
-    label{
+    label {
       display: flex;
       flex-direction: row;
       align-items: center;
       gap: 10px;
       width: 100%;
-      a{
+      a {
         text-decoration: underline;
         color: $Vinous;
         font-weight: 500;
       }
-      input{
+      input {
         width: fit-content;
         margin-right: 10px;
       }
@@ -170,6 +312,7 @@
       display: flex;
       flex-direction: column;
       gap: 5px;
+      width: 100%;
 
       .delivery-title {
         font-weight: 600;
