@@ -236,7 +236,7 @@ export default function CheckoutPage() {
                   />
                   {errors.email && <span className="error-text">{errors.email}</span>}
                 </div>
-                <div className="form-group">
+                <div className="form-group hidden-field">
                   <input
                     type="text"
                     name="address"
@@ -248,11 +248,6 @@ export default function CheckoutPage() {
                     readOnly={deliveryMethod === 'cdek'}
                   />
                   {errors.address && <span className="error-text">{errors.address}</span>}
-                  {deliveryMethod === 'cdek' && selectedPoint && (
-                    <div className="address-hint">
-                      Адрес автоматически заполнен из выбранного пункта
-                    </div>
-                  )}
                 </div>
               </div>
             </div>
@@ -262,89 +257,88 @@ export default function CheckoutPage() {
 
               <div className="delivery-methods">
                 <label className="delivery-option">
-                  <input
-                    type="radio"
-                    name="delivery"
-                    value="cdek"
-                    checked={deliveryMethod === 'cdek'}
-                    onChange={(e) => {
-                      setDeliveryMethod(e.target.value);
-                      setSelectedPoint(null);
-                      setFormData((prev) => ({ ...prev, address: '' }));
-                    }}
-                  />
                   <div className="delivery-info">
-                    <span className="delivery-title">Доставка СДЭК</span>
-                    <span className="delivery-desc">Доставим в ближайший пункт выдачи</span>
-                    <span className="delivery-price">от 300 ₽</span>
-
-                    {deliveryMethod === 'cdek' && (
-                      <div className="cdek-widget-section">
-                        <div className="widget-container">
-                          <CDEKWidget onPointSelect={handlePointSelect} />
-
-                          {/* Информация о выбранном пункте */}
-                          {selectedPoint && (
-                            <div className="selected-point-info">
-                              <div className="selected-point-header">
-                                <h4>Выбран пункт выдачи</h4>
-                                <button
-                                  type="button"
-                                  onClick={() => {
-                                    setSelectedPoint(null);
-                                    setFormData((prev) => ({
-                                      ...prev,
-                                      address: ''
-                                    }));
-                                  }}
-                                  className="change-point-btn"
-                                >
-                                  Изменить
-                                </button>
-                              </div>
-                              <div className="selected-point-details">
-                                <p>
-                                  <strong>Адрес:</strong> {selectedPoint.fullAddress}
-                                </p>
-                              </div>
-                            </div>
-                          )}
-
-                          {errors.delivery && (
-                            <span className="error-text delivery-error">{errors.delivery}</span>
-                          )}
-                        </div>
-                      </div>
-                    )}
+                    <input
+                      type="radio"
+                      name="delivery"
+                      value="cdek"
+                      checked={deliveryMethod === 'cdek'}
+                      onChange={(e) => {
+                        setDeliveryMethod(e.target.value);
+                        setSelectedPoint(null);
+                        setFormData((prev) => ({ ...prev, address: '' }));
+                      }}
+                    />
+                    <div className='delivery-info-text'>
+                      <span className="delivery-title">Доставка СДЭК</span>
+                      <span className="delivery-desc">Доставим в ближайший пункт выдачи</span>
+                      <span className="delivery-price">от 300 ₽</span>
+                    </div>
                   </div>
+                  {deliveryMethod === 'cdek' && (
+                    <div className="widget-container">
+                      <CDEKWidget onPointSelect={handlePointSelect} />
+
+                      {/* Информация о выбранном пункте */}
+                      {selectedPoint && (
+                        <div className="selected-point-info">
+                          <div className="selected-point-details">
+                            <p>
+                              <strong>Адрес:</strong> {selectedPoint.fullAddress}
+                            </p>
+                          </div>
+                        </div>
+                      )}
+
+                      {errors.delivery && (
+                        <span className="error-text delivery-error">{errors.delivery}</span>
+                      )}
+                    </div>
+                  )}
                 </label>
 
                 <label className="delivery-option">
-                  <input
-                    type="radio"
-                    name="delivery"
-                    value="moscowCourier"
-                    checked={deliveryMethod === 'moscowCourier'}
-                    onChange={(e) => {
-                      setDeliveryMethod(e.target.value);
-                      setSelectedPoint(null);
-                      setFormData((prev) => ({ ...prev, address: '' }));
-                    }}
-                  />
                   <div className="delivery-info">
-                    <span className="delivery-title">Курьерская доставка по Москве</span>
-                    <span className="delivery-desc">
-                      — Москва (в пределах МКАД) 800 руб.
-                      <br />
-                      — Доставка до шоурума 1500 руб.
-                      <br />
-                      — Московская область (до 10 км от МКАД) 1200 руб.
-                      <br />
-                      — Московская область (10–30 км от МКАД) 1500 руб.
-                      <br />— Московская область (30–50 км от МКАД) 2500 руб.
-                    </span>
-                    <span className="delivery-price">от 800 ₽</span>
+                    <input
+                      type="radio"
+                      name="delivery"
+                      value="moscowCourier"
+                      checked={deliveryMethod === 'moscowCourier'}
+                      onChange={(e) => {
+                        setDeliveryMethod(e.target.value);
+                        setSelectedPoint(null);
+                        setFormData((prev) => ({ ...prev, address: '' }));
+                      }}
+                    />
+                    <div className='delivery-info-text'>
+                      <span className="delivery-title">Курьерская доставка по Москве</span>
+                      <span className="delivery-desc">
+                        — Москва (в пределах МКАД) 800 руб.
+                        <br />
+                        — Доставка до шоурума 1500 руб.
+                        <br />
+                        — Московская область (до 10 км от МКАД) 1200 руб.
+                        <br />
+                        — Московская область (10–30 км от МКАД) 1500 руб.
+                        <br />— Московская область (30–50 км от МКАД) 2500 руб.
+                      </span>
+                      <span className="delivery-price">от 800 ₽</span>
+                    </div>
                   </div>
+                  {deliveryMethod === 'moscowCourier' && (
+                    <div className="form-group">
+                      <input
+                        type="text"
+                        value={formData.address}
+                        placeholder="Введите адрес доставки *"
+                        className={errors.address ? 'error' : ''}
+                        onChange={(e) =>
+                          setFormData(prev => ({ ...prev, address: e.target.value }))
+                        }
+                      />
+                      {errors.address && <span className="error-text">{errors.address}</span>}
+                    </div>
+                  )}
                 </label>
               </div>
             </div>
@@ -391,18 +385,6 @@ export default function CheckoutPage() {
             <div className="total-row">
               <span>Товары:</span>
               <span>{total} ₽</span>
-            </div>
-            <div className="total-row">
-              <span>Доставка:</span>
-              <span>
-                {deliveryMethod === 'pickup'
-                  ? 'Бесплатно'
-                  : deliveryMethod === 'cdek'
-                  ? selectedPoint
-                    ? `${selectedPoint.price} ₽`
-                    : 'от 300 ₽'
-                  : 'от 800 ₽'}
-              </span>
             </div>
             <hr />
             <div className="total-row final-total">

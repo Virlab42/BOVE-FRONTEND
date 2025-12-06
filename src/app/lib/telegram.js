@@ -12,7 +12,7 @@ export async function sendToTelegram(order, orderId) {
 <b>Телефон:</b> ${order.customer.phone}
 <b>Email:</b> ${order.customer.email}
 <b>Отправка:</b> ${order.delivery.method}
-<b>Адрес:</b> ${order.delivery.point.fullAddress || order.delivery.point.address}
+<b>Адрес:</b> ${order.delivery.point.fullAddress || order.delivery.point.address || order.delivery.address}
 <b>Итого:</b> ${order.total} ₽
 
 <b>Товары:</b>
