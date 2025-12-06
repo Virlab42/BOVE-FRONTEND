@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getOrder } from "@/lib/orderStore";
+import { getOrder } from "@/app/lib/orderStore";
 
 export async function GET(req, { params }) {
   const order = getOrder(params.orderId);

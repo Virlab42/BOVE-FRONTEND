@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import { getOrder, updateOrder, deleteOrder } from "@/lib/orderStore";
-import { sendToTelegram } from "@/lib/telegram";
+import { getOrder, updateOrder, deleteOrder } from "@/app/lib/orderStore";
+import { sendToTelegram } from "@/app/lib/telegram";
 
 export async function POST(req) {
   try {
