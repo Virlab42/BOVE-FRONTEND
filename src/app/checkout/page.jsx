@@ -1,53 +1,48 @@
-"use client";
-import Inputmask from "inputmask";
-import { useState, useEffect, useRef } from "react";
-import { useRouter } from "next/navigation";
-import { useCart } from "@/context/CartContext";
-import "./CheckoutPage.scss";
-import CdekMap from "../../../components/CdekMap/CdekMap";
+'use client';
+import Inputmask from 'inputmask';
+import { useState, useEffect, useRef } from 'react';
+import { useRouter } from 'next/navigation';
+import { useCart } from '@/context/CartContext';
+import './CheckoutPage.scss';
+import CDEKWidget from '../../../components/CDEKWidget/CDEKWidget';
 
 export default function CheckoutPage() {
   const { cart } = useCart();
   const router = useRouter();
-  const widgetContainerRef = useRef(null);
-  const iframeRef = useRef(null);
-  
 
   const [formData, setFormData] = useState({
-    name: "",
-    phone: "",
-    email: "",
-    address: "",
+    name: '',
+    phone: '',
+    email: '',
+    address: ''
   });
 
-  const [deliveryMethod, setDeliveryMethod] = useState("pickup");
+  const [deliveryMethod, setDeliveryMethod] = useState('pickup');
   const [selectedPoint, setSelectedPoint] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState({});
   const [agreed, setAgreed] = useState(false);
-  const [showSimpleSelector, setShowSimpleSelector] = useState(false);
-  const [iframeLoading, setIframeLoading] = useState(true);
 
   const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
   // Рассчитываем стоимость доставки
   const calculateDeliveryCost = () => {
-    if (deliveryMethod === "pickup") return 0;
-    if (deliveryMethod === "moscowCourier") return 800;
-    if (deliveryMethod === "cdek" && selectedPoint) {
+    if (deliveryMethod === 'pickup') return 0;
+    if (deliveryMethod === 'moscowCourier') return 800;
+    if (deliveryMethod === 'cdek' && selectedPoint) {
       return selectedPoint.price || 300;
     }
-    return 300; // базовая цена СДЭК
+    return 300;
   };
 
   const deliveryCost = calculateDeliveryCost();
-  const finalTotal = total;
+  const finalTotal = total + deliveryCost; // Исправлено: нужно добавлять стоимость доставки
 
   // Маска для телефона
   useEffect(() => {
     const phoneInput = document.querySelector("input[name='phone']");
     if (phoneInput) {
-      const im = new Inputmask("+7 (999) 999-99-99");
+      const im = new Inputmask('+7 (999) 999-99-99');
       im.mask(phoneInput);
     }
   }, []);
@@ -56,13 +51,13 @@ export default function CheckoutPage() {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: value,
+      [name]: value
     }));
 
     if (errors[name]) {
       setErrors((prev) => ({
         ...prev,
-        [name]: "",
+        [name]: ''
       }));
     }
   };
@@ -71,95 +66,53 @@ export default function CheckoutPage() {
     const newErrors = {};
 
     if (!formData.name.trim()) {
-      newErrors.name = "Введите имя";
+      newErrors.name = 'Введите имя';
     }
 
-    // Для СДЭК адрес берется из выбранного пункта
-    if (deliveryMethod === "cdek") {
+    if (deliveryMethod === 'cdek') {
       if (!selectedPoint) {
-        newErrors.delivery = "Выберите пункт выдачи СДЭК";
-      } else {
-        // Адрес уже установлен из selectedPoint
+        newErrors.delivery = 'Выберите пункт выдачи СДЭК';
       }
     } else if (!formData.address.trim()) {
-      newErrors.address = "Введите адрес";
+      newErrors.address = 'Введите адрес';
     }
 
     if (!formData.phone.trim()) {
-      newErrors.phone = "Введите телефон";
+      newErrors.phone = 'Введите телефон';
     } else if (
-      !/^[\+]?[78][-\s]?\(?\d{3}\)?[-\s]?\d{3}[-\s]?\d{2}[-\s]?\d{2}$/.test(
-        formData.phone
-      )
+      !/^[\+]?[78][-\s]?\(?\d{3}\)?[-\s]?\d{3}[-\s]?\d{2}[-\s]?\d{2}$/.test(formData.phone)
     ) {
-      newErrors.phone = "Введите корректный телефон";
+      newErrors.phone = 'Введите корректный телефон';
     }
 
     if (!formData.email.trim()) {
-      newErrors.email = "Введите email";
+      newErrors.email = 'Введите email';
     } else if (!/^\S+@\S+\.\S+$/.test(formData.email)) {
-      newErrors.email = "Введите корректный email";
+      newErrors.email = 'Введите корректный email';
     }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  useEffect(() => {
-    const handleMessage = (event) => {
-      console.log("📨 Message received from iframe:", event.data);
+  // Обработчик выбора пункта СДЭК
+  const handlePointSelect = (point) => {
+    setSelectedPoint(point);
 
-      if (event.data.type === "POINT_SELECTED") {
-  const point = event.data.payload;
-  const pointWithDefaults = {
-    id: point.id || `point_${Date.now()}`,
-    name: point.name || "Пункт выдачи СДЭК",
-    address: point.address || "Адрес не указан",
-    price: point.price || 300,
-    city: point.city || "Москва",
-    deliveryPeriod: point.deliveryPeriod || "3-5 дн.",
-  };
+    // Автоматически заполняем адрес в форме
+    setFormData((prev) => ({
+      ...prev,
+      address: point.fullAddress
+    }));
 
-  setSelectedPoint(pointWithDefaults);
-  console.log(pointWithDefaults);
-
-  // Подставляем адрес сразу в форму
-  setFormData((prev) => ({
-    ...prev,
-    address: `${pointWithDefaults.name}, ${pointWithDefaults.address}`,
-  }));
-}
-      if (
-        event.data.type === "WIDGET_READY" ||
-        event.data.type === "IFRAME_LOADED"
-      ) {
-        console.log("✅ Widget/iframe ready");
-        setIframeLoading(false);
-      }
-      if (event.data.type === "WIDGET_ERROR") {
-        console.error("❌ Widget error:", event.data.payload);
-        setIframeLoading(false);
-      }
-    };
-
-    window.addEventListener("message", handleMessage);
-
-    return () => {
-      window.removeEventListener("message", handleMessage);
-    };
-  }, []);
-
-  // Обработка выбора пункта из простого селектора
-  /* useEffect(() => {
-    if (selectedPoint && deliveryMethod === "cdek") {
-      console.log("🔄 Updating form with selected point:", selectedPoint);
-      // Подставляем адрес в форму
-      setFormData((prev) => ({
+    // Очищаем ошибку доставки, если была
+    if (errors.delivery) {
+      setErrors((prev) => ({
         ...prev,
-        address: `${selectedPoint.name}, ${selectedPoint.address}`,
+        delivery: ''
       }));
     }
-  }, [selectedPoint, deliveryMethod]); */
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -173,27 +126,27 @@ export default function CheckoutPage() {
         customer: {
           name: formData.name,
           phone: formData.phone,
-          email: formData.email,
+          email: formData.email
         },
         delivery: {
           method: deliveryMethod,
-          point: deliveryMethod === "cdek" ? selectedPoint : null,
+          point: deliveryMethod === 'cdek' ? selectedPoint : null,
           address: formData.address,
-          cost: deliveryCost,
+          cost: deliveryCost
         },
         items: cart,
         total: finalTotal,
-        date: new Date().toISOString(),
+        date: new Date().toISOString()
       };
 
-      console.log("📦 Order data to send:", orderData);
+      console.log('📦 Order data to send:', orderData);
 
-      const response = await fetch("/api/payment/create", {
-        method: "POST",
+      const response = await fetch('/api/payment/create', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json'
         },
-        body: JSON.stringify(orderData),
+        body: JSON.stringify(orderData)
       });
 
       const result = await response.json();
@@ -201,17 +154,17 @@ export default function CheckoutPage() {
       if (result.success) {
         window.location.href = result.paymentUrl;
       } else {
-        alert("Ошибка при оформлении заказа");
+        alert('Ошибка при оформлении заказа');
       }
     } catch (error) {
-      console.error("Ошибка:", error);
-      alert("Произошла ошибка при оформлении заказа");
+      console.error('Ошибка:', error);
+      alert('Произошла ошибка при оформлении заказа');
     } finally {
       setIsLoading(false);
     }
   };
 
-  const cleanedPhone = formData.phone.replace(/\D/g, "");
+  const cleanedPhone = formData.phone.replace(/\D/g, '');
 
   const isFormValid =
     formData.name.trim().length > 0 &&
@@ -220,7 +173,7 @@ export default function CheckoutPage() {
     /^\S+@\S+\.\S+$/.test(formData.email) &&
     formData.address.trim().length > 0 &&
     deliveryMethod.trim().length > 0 &&
-    (deliveryMethod !== "cdek" || selectedPoint) &&
+    (deliveryMethod !== 'cdek' || selectedPoint) &&
     agreed;
 
   if (cart.length === 0) {
@@ -229,7 +182,7 @@ export default function CheckoutPage() {
         <div className="empty-cart">
           <h1>Корзина пуста</h1>
           <p>Добавьте товары в корзину для оформления заказа</p>
-          <button onClick={() => router.push("/")} className="back-to-shop">
+          <button onClick={() => router.push('/')} className="back-to-shop">
             Вернуться в магазин
           </button>
         </div>
@@ -254,11 +207,9 @@ export default function CheckoutPage() {
                     value={formData.name}
                     onChange={handleInputChange}
                     placeholder="Ваше имя *"
-                    className={errors.name ? "error" : ""}
+                    className={errors.name ? 'error' : ''}
                   />
-                  {errors.name && (
-                    <span className="error-text">{errors.name}</span>
-                  )}
+                  {errors.name && <span className="error-text">{errors.name}</span>}
                 </div>
                 <div className="form-group">
                   <input
@@ -267,11 +218,9 @@ export default function CheckoutPage() {
                     value={formData.phone}
                     onChange={handleInputChange}
                     placeholder="+7 (___) ___-__-__ *"
-                    className={errors.phone ? "error" : ""}
+                    className={errors.phone ? 'error' : ''}
                   />
-                  {errors.phone && (
-                    <span className="error-text">{errors.phone}</span>
-                  )}
+                  {errors.phone && <span className="error-text">{errors.phone}</span>}
                 </div>
               </div>
 
@@ -283,34 +232,28 @@ export default function CheckoutPage() {
                     value={formData.email}
                     onChange={handleInputChange}
                     placeholder="Ваш email *"
-                    className={errors.email ? "error" : ""}
+                    className={errors.email ? 'error' : ''}
                   />
-                  {errors.email && (
-                    <span className="error-text">{errors.email}</span>
-                  )}
+                  {errors.email && <span className="error-text">{errors.email}</span>}
                 </div>
                 <div className="form-group">
-  <input
-    type="text"
-    name="address"
-    value={formData.address}
-    placeholder={
-      deliveryMethod === "cdek"
-        ? "Адрес выбранного пункта *"
-        : "Ваш адрес *"
-    }
-    className={errors.address ? "error" : ""}
-    readOnly={deliveryMethod === "cdek"}
-  />
-  {errors.address && (
-    <span className="error-text">{errors.address}</span>
-  )}
-  {deliveryMethod === "cdek" && selectedPoint && (
-    <div className="address-hint">
-      Адрес автоматически заполнен из выбранного пункта
-    </div>
-  )}
-</div>
+                  <input
+                    type="text"
+                    name="address"
+                    value={formData.address}
+                    placeholder={
+                      deliveryMethod === 'cdek' ? 'Адрес выбранного пункта *' : 'Ваш адрес *'
+                    }
+                    className={errors.address ? 'error' : ''}
+                    readOnly={deliveryMethod === 'cdek'}
+                  />
+                  {errors.address && <span className="error-text">{errors.address}</span>}
+                  {deliveryMethod === 'cdek' && selectedPoint && (
+                    <div className="address-hint">
+                      Адрес автоматически заполнен из выбранного пункта
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
 
@@ -318,131 +261,59 @@ export default function CheckoutPage() {
               <h2>Способ получения</h2>
 
               <div className="delivery-methods">
-
                 <label className="delivery-option">
                   <input
                     type="radio"
                     name="delivery"
                     value="cdek"
-                    checked={deliveryMethod === "cdek"}
+                    checked={deliveryMethod === 'cdek'}
                     onChange={(e) => {
                       setDeliveryMethod(e.target.value);
                       setSelectedPoint(null);
-                      setShowSimpleSelector(false);
-                      setIframeLoading(true);
-                      // Очищаем адрес при переключении на СДЭК
-                      setFormData((prev) => ({ ...prev, address: "" }));
+                      setFormData((prev) => ({ ...prev, address: '' }));
                     }}
                   />
                   <div className="delivery-info">
                     <span className="delivery-title">Доставка СДЭК</span>
-                    <span className="delivery-desc">
-                      Доставим в ближайший пункт выдачи
-                    </span>
+                    <span className="delivery-desc">Доставим в ближайший пункт выдачи</span>
                     <span className="delivery-price">от 300 ₽</span>
 
-                    {deliveryMethod === "cdek" && (
+                    {deliveryMethod === 'cdek' && (
                       <div className="cdek-widget-section">
-                          <div className="widget-container">
-                            <div
-                              ref={widgetContainerRef}
-                              className="widget-placeholder"
-                              style={{
-                                width: "100%",
-                                minHeight: "500px",
-                                marginTop: "15px",
-                                position: "relative",
-                                borderRadius: "0px",
-                                overflow: "hidden",
-                              }}
-                            >
-                              <CdekMap onSelect={setSelectedPoint} />
-                              {selectedPoint && (
-        <div>
-          <h3>Выбранный ПВЗ:</h3>
-          <p>{selectedPoint.name}</p>
-          <p>{selectedPoint.address}</p>
-          <p>Цена доставки: {selectedPoint.price} ₽</p>
-        </div>
-      )}
-                              {/* <iframe
-                                ref={iframeRef}
-                                src="/api/cdek-widget"
-                                style={{
-                                  width: "100%",
-                                  height: "500px",
-                                  border: "none",
-                                }}
-                                title="CDEK Widget"
-                                sandbox="allow-scripts allow-same-origin"
-                                onLoad={(e) => {
-                                  console.log("🔄 Iframe loaded");
-                                  const goods = cart.reduce(
-                                    (sum, item) =>
-                                      sum +
-                                      (item.weight || 0.5) * item.quantity,
-                                    0
-                                  );
+                        <div className="widget-container">
+                          <CDEKWidget onPointSelect={handlePointSelect} />
 
-                                  e.target.contentWindow.postMessage(
-                                    {
-                                      type: "SET_GOODS",
-                                      payload: { weight: Math.max(goods, 0.1) },
-                                    },
-                                    "*"
-                                  );
-                                }}
-                              /> */}
-                            </div>
-
-                            {/* Информация о выбранном пункте */}
-                            {/* {selectedPoint && !showSimpleSelector && (
-                              <div className="selected-point-info">
-                                <div className="selected-point-header">
-                                  <h4>✅ Выбран пункт выдачи</h4>
-                                  <button
-                                    type="button"
-                                    onClick={() => {
-                                      setSelectedPoint(null);
-                                      setIframeLoading(true);
-                                      // Очищаем адрес
-                                      setFormData((prev) => ({
-                                        ...prev,
-                                        address: "",
-                                      }));
-                                    }}
-                                    className="change-point-btn"
-                                  >
-                                    Изменить
-                                  </button>
-                                </div>
-                                <div className="selected-point-details">
-                                  <p>
-                                    <strong>Название:</strong>{" "}
-                                    {selectedPoint.name}
-                                  </p>
-                                  <p>
-                                    <strong>Адрес:</strong>{" "}
-                                    {selectedPoint.address}
-                                  </p>
-                                  <p>
-                                    <strong>Стоимость доставки:</strong>{" "}
-                                    {selectedPoint.price} ₽
-                                  </p>
-                                  <p>
-                                    <strong>Срок доставки:</strong>{" "}
-                                    {selectedPoint.deliveryPeriod}
-                                  </p>
-                                </div>
+                          {/* Информация о выбранном пункте */}
+                          {selectedPoint && (
+                            <div className="selected-point-info">
+                              <div className="selected-point-header">
+                                <h4>Выбран пункт выдачи</h4>
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    setSelectedPoint(null);
+                                    setFormData((prev) => ({
+                                      ...prev,
+                                      address: ''
+                                    }));
+                                  }}
+                                  className="change-point-btn"
+                                >
+                                  Изменить
+                                </button>
                               </div>
-                            )} */}
+                              <div className="selected-point-details">
+                                <p>
+                                  <strong>Адрес:</strong> {selectedPoint.fullAddress}
+                                </p>
+                              </div>
+                            </div>
+                          )}
 
-                            {errors.delivery && !showSimpleSelector && (
-                              <span className="error-text delivery-error">
-                                {errors.delivery}
-                              </span>
-                            )}
-                          </div>
+                          {errors.delivery && (
+                            <span className="error-text delivery-error">{errors.delivery}</span>
+                          )}
+                        </div>
                       </div>
                     )}
                   </div>
@@ -453,18 +324,15 @@ export default function CheckoutPage() {
                     type="radio"
                     name="delivery"
                     value="moscowCourier"
-                    checked={deliveryMethod === "moscowCourier"}
+                    checked={deliveryMethod === 'moscowCourier'}
                     onChange={(e) => {
                       setDeliveryMethod(e.target.value);
                       setSelectedPoint(null);
-                      // Сбрасываем адрес для курьерской доставки
-                      setFormData((prev) => ({ ...prev, address: "" }));
+                      setFormData((prev) => ({ ...prev, address: '' }));
                     }}
                   />
                   <div className="delivery-info">
-                    <span className="delivery-title">
-                      Курьерская доставка по Москве
-                    </span>
+                    <span className="delivery-title">Курьерская доставка по Москве</span>
                     <span className="delivery-desc">
                       — Москва (в пределах МКАД) 800 руб.
                       <br />
@@ -488,7 +356,7 @@ export default function CheckoutPage() {
                   checked={agreed}
                   onChange={(e) => setAgreed(e.target.checked)}
                 />
-                Я согласен с{" "}
+                Я согласен с{' '}
                 <a
                   href="/docs/политика_конфиденциальности.pdf"
                   target="_blank"
@@ -500,12 +368,8 @@ export default function CheckoutPage() {
               </label>
             </div>
 
-            <button
-              type="submit"
-              className="submit-order-btn"
-              disabled={isLoading || !isFormValid}
-            >
-              {isLoading ? "Оформление..." : "Оформить заказ"}
+            <button type="submit" className="submit-order-btn" disabled={isLoading || !isFormValid}>
+              {isLoading ? 'Оформление...' : 'Оформить заказ'}
             </button>
           </form>
         </div>
@@ -519,9 +383,7 @@ export default function CheckoutPage() {
                   <span className="item-name">{item.name}</span>
                   <span className="item-quantity">× {item.quantity}</span>
                 </div>
-                <span className="item-price">
-                  {item.price * item.quantity} ₽
-                </span>
+                <span className="item-price">{item.price * item.quantity} ₽</span>
               </div>
             ))}
           </div>
@@ -533,13 +395,13 @@ export default function CheckoutPage() {
             <div className="total-row">
               <span>Доставка:</span>
               <span>
-                {deliveryMethod === "pickup"
-                  ? "Бесплатно"
-                  : deliveryMethod === "cdek"
+                {deliveryMethod === 'pickup'
+                  ? 'Бесплатно'
+                  : deliveryMethod === 'cdek'
                   ? selectedPoint
                     ? `${selectedPoint.price} ₽`
-                    : "от 300 ₽"
-                  : "от 800 ₽"}
+                    : 'от 300 ₽'
+                  : 'от 800 ₽'}
               </span>
             </div>
             <hr />

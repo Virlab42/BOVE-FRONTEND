@@ -1,36 +1,57 @@
-"use client";
+'use client';
+import { useEffect, useRef } from 'react';
 
-import { useEffect } from "react";
+export default function CDEKWidget({ onPointSelect }) {
+  const widgetRef = useRef(null);
 
-export default function CDEKWidget() {
   useEffect(() => {
-    const script = document.createElement("script");
-    script.src = "https://cdn.jsdelivr.net/npm/@cdek-it/widget@3/dist/widget.js";
-    script.async = true;
+    const script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/@cdek-it/widget@3';
 
     script.onload = () => {
-      if (!window.CDEKWidget) {
-        console.error("CDEK Widget не загрузился");
-        return;
-      }
+      if (window.CDEKWidget) {
+        widgetRef.current = new window.CDEKWidget({
+          from: 'Москва',
+          root: 'cdek-widget',
+          apiKey: '3134a676-b82e-4ad9-b210-e20c3dcf7772',
+          defaultLocation: 'Москва',
+          servicePath: '/api/cdek/service',
+          type: 'pvz',
 
-      // ⚡️ Минимальная инициализация для проверки отрисовки ПВЗ
-      new window.CDEKWidget({
-        from: "Москва",             // город отправителя
-        root: "cdek-widget",        // id контейнера
-        apiKey: "3134a676-b82e-4ad9-b210-e20c3dcf7772", // ключ Yandex Maps, нужен обязательно
-        servicePath: "/api/cdek/service", // путь к вашему API роуту
-        defaultLocation: "Москва",  // центр карты при загрузке
-        type: "pvz",                // только ПВЗ
-      });
+          onChoose: (type, tariff, target) => {
+            onPointSelect({
+              id: target.code,
+              name: target.name,
+              price: target.price || 300,
+              address: target.address,
+              city: target.city,
+              fullAddress: `${target.city}, ${target.address}`,
+              coordinates: {
+                lat: target.location[0],
+                lng: target.location[1]
+              }
+            });
+          },
+
+          onError: (error) => {
+            console.error('CDEK Widget error:', error);
+          }
+        });
+      }
     };
 
     document.body.appendChild(script);
 
+    // Очистка при размонтировании
     return () => {
-      document.body.removeChild(script);
+      if (script.parentNode) {
+        document.body.removeChild(script);
+      }
+      if (widgetRef.current) {
+        widgetRef.current.destroy();
+      }
     };
-  }, []);
+  }, [onPointSelect]);
 
-  return <div id="cdek-widget" style={{ width: "100%", height: "600px" }} />;
+  return <div id="cdek-widget" style={{ width: '100%', height: '600px' }} />;
 }
