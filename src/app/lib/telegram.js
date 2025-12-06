@@ -11,7 +11,8 @@ export async function sendToTelegram(order, orderId) {
 <b>Имя:</b> ${order.customer.name}
 <b>Телефон:</b> ${order.customer.phone}
 <b>Email:</b> ${order.customer.email}
-<b>Адрес:</b> ${order.delivery.address}
+<b>Отправка:</b> ${order.delivery.method}
+<b>Адрес:</b> ${order.delivery.point.fullAddress || order.delivery.point.address}
 <b>Итого:</b> ${order.total} ₽
 
 <b>Товары:</b>
