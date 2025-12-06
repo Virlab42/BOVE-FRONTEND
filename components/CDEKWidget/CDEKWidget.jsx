@@ -3,6 +3,12 @@ import { useEffect, useRef } from 'react';
 
 export default function CDEKWidget({ onPointSelect }) {
   const widgetRef = useRef(null);
+  const onSelectRef = useRef(onPointSelect);
+
+  // обновляем ссылку, но НЕ перезапускаем виджет
+  useEffect(() => {
+    onSelectRef.current = onPointSelect;
+  }, [onPointSelect]);
 
   useEffect(() => {
     const script = document.createElement('script');
@@ -17,18 +23,22 @@ export default function CDEKWidget({ onPointSelect }) {
           defaultLocation: 'Москва',
           servicePath: '/api/cdek/service',
           type: 'pvz',
+          
 
           onChoose: (type, tariff, target) => {
-            onPointSelect({
+            console.log("RAW TARGET:", target);
+            if (!target) return;
+            console.log(target.formatted);
+            onSelectRef.current({
               id: target.code,
               name: target.name,
               price: target.price || 300,
-              address: target.address,
+              address: target.formatted || target.address || target.name,
               city: target.city,
-              fullAddress: `${target.city}, ${target.address}`,
+              fullAddress: `${target.city}, ${target.name}`,
               coordinates: {
-                lat: target.location[0],
-                lng: target.location[1]
+                lat: target.location?.[0],
+                lng: target.location?.[1]
               }
             });
           },
@@ -42,16 +52,10 @@ export default function CDEKWidget({ onPointSelect }) {
 
     document.body.appendChild(script);
 
-    // Очистка при размонтировании
     return () => {
-      if (script.parentNode) {
-        document.body.removeChild(script);
-      }
-      if (widgetRef.current) {
-        widgetRef.current.destroy();
-      }
+      if (widgetRef.current) widgetRef.current.destroy();
     };
-  }, [onPointSelect]);
+  }, []); 
 
   return <div id="cdek-widget" style={{ width: '100%', height: '600px' }} />;
 }

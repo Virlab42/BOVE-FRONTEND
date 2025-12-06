@@ -36,7 +36,7 @@ export default function CheckoutPage() {
   };
 
   const deliveryCost = calculateDeliveryCost();
-  const finalTotal = total + deliveryCost; // Исправлено: нужно добавлять стоимость доставки
+  const finalTotal = total;
 
   // Маска для телефона
   useEffect(() => {
