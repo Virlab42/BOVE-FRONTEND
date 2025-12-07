@@ -39,7 +39,7 @@ export default function About() {
             />
             <div className="about-cta">
               <Image
-                src="/Home/About/image3.jpg"
+                src="/Home/About/image4.jpg"
                 width={1000}
                 height={1000}
                 alt="О бренде BOVE"
