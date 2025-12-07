@@ -1,5 +1,5 @@
-const TELEGRAM_BOT_TOKEN = "8001734265:AAFFTF2qy3-7W6xh9L2Ht-pr4Gwyp4TwA1k";
-const TELEGRAM_CHAT_ID = "-4809235355";
+//const TELEGRAM_BOT_TOKEN = "8001734265:AAFFTF2qy3-7W6xh9L2Ht-pr4Gwyp4TwA1k";
+//const TELEGRAM_CHAT_ID = "-4809235355";
 
 export async function sendToTelegram(order, orderId) {
   const items = order.items
@@ -20,12 +20,12 @@ ${items}
   `;
 
   await fetch(
-    `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`,
+    `https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}/sendMessage`,
     {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        chat_id: TELEGRAM_CHAT_ID,
+        chat_id: process.env.TELEGRAM_CHAT_ID,
         text: msg,
         parse_mode: "HTML",
       }),
