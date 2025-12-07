@@ -2,20 +2,21 @@
 //const TELEGRAM_CHAT_ID = "-4809235355";
 
 export async function sendToTelegram(order, orderId) {
+  console.log(order.items);
   const items = order.items
-    .map((i) => `${i.name} × ${i.quantity} = ${i.price * i.quantity} ₽`)
+    .map((i) => `${i.title} × ${i.quantity} = ${i.price * i.quantity} ₽`)
     .join("\n");
 
   const msg = `
-<b>Оплачен заказ #${orderId}</b>
+<b>Заказ #${orderId}</b>
 <b>Имя:</b> ${order.customer.name}
 <b>Телефон:</b> ${order.customer.phone}
 <b>Email:</b> ${order.customer.email}
 <b>Отправка:</b> ${order.delivery.method}
 <b>Адрес:</b> ${
-    order.delivery.point.fullAddress ||
-    order.delivery.point.address ||
-    order.delivery.address
+    order.delivery?.point?.fullAddress ||
+    order.delivery?.point?.address ||
+    order.delivery?.address
   }
 <b>Итого:</b> ${order.total} ₽
 
