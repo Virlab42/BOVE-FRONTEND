@@ -8,7 +8,8 @@ export async function POST(req) {
     // Получаем тело как текст (важно для подписи)
     const bodyText = await req.text();
     const body = JSON.parse(bodyText);
-
+    console.log(body); 
+    
     // ==== Проверка подписи симметричной ==== 
     const tokenHeader =
       req.headers.get("x-token") ||
