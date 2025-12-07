@@ -520,6 +520,9 @@
 .widget-container {
   position: relative;
   width: 100%;
+  input{
+    background-color: transparent;
+  }
 }
 
 .selected-point-info {
