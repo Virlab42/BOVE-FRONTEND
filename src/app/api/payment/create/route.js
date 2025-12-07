@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { saveOrder } from "@/app/lib/orderStore";
+import { saveOrder, getOrder } from "@/app/lib/orderStore";
 
 const RETURN_URL = "https://bove-brand.ru/order-success";
 const FAIL_URL = "https://bove-brand.ru/checkout";
@@ -13,7 +13,7 @@ export async function POST(req) {
     const orderId = "ORD-" + Date.now();
 
     saveOrder(orderId, order);
-    console.log("Сохранили заказ:", orderId, order);
+    console.log("СОХРАНИЛИ ЗАКАЗ", getOrder(orderId));
 
     // Формируем payload для банка
     const payload = new URLSearchParams({
