@@ -7,7 +7,7 @@ import './CheckoutPage.scss';
 import CDEKWidget from '../../../components/CDEKWidget/CDEKWidget';
 
 export default function CheckoutPage() {
-  const { cart } = useCart();
+  const { cart, clear } = useCart();
   const router = useRouter();
 
   const [formData, setFormData] = useState({
@@ -152,6 +152,7 @@ export default function CheckoutPage() {
       const result = await response.json();
 
       if (result.success) {
+        clear();
         window.location.href = result.paymentUrl;
       } else {
         alert('Ошибка при оформлении заказа');

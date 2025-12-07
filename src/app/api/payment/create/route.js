@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
 import { saveOrder, getOrder } from "@/app/lib/orderStore";
 import { sendToTelegram } from "@/app/lib/telegram";
-const RETURN_URL = "https://bove-brand.ru/order-success";
+//const RETURN_URL = "https://bove-brand.ru/order-success";
 const FAIL_URL = "https://bove-brand.ru/checkout";
 
-//const RETURN_URL = "http://localhost:3000/order-success";
+const RETURN_URL = "http://localhost:3000/order-success";
 //const FAIL_URL = "http://localhost:3000/checkout";
 
 export async function POST(req) {
