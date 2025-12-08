@@ -3,6 +3,8 @@ import { useState } from "react";
 import "./InfoPage.scss";
 import Image from "next/image";
 
+
+
 export default function InfoPage() {
   const [openSection, setOpenSection] = useState("contacts");
 

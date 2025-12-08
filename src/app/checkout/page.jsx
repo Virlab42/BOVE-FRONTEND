@@ -25,6 +25,7 @@ export default function CheckoutPage() {
 
   const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
+      console.log(cart);
   // Рассчитываем стоимость доставки
   const calculateDeliveryCost = () => {
     if (deliveryMethod === 'pickup') return 0;
@@ -139,7 +140,6 @@ export default function CheckoutPage() {
         date: new Date().toISOString()
       };
 
-      console.log('📦 Order data to send:', orderData);
 
       const response = await fetch('/api/payment/create', {
         method: 'POST',

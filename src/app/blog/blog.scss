@@ -2,4 +2,36 @@
     min-height: 75vh;
     padding-top: 150px;
     padding-bottom: 80px;
+    h1{
+        margin-bottom: 40px;
+    }
+        .blog-cards{
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            gap: 20px;
+            .article-card{
+                display: flex;
+                flex-direction: column;
+                width: calc(33.3% - 10px);
+                gap: 5px;
+                img{
+                    width: 100%;
+                    object-fit: cover;
+                }
+                .card-title{
+                    margin-bottom: 0;
+                    font-weight: 500;
+                    color: black;
+                    line-height: 1;
+                }
+                .card-desc{
+                    font-weight: 400;
+                    font-size: 14px;
+                    color: rgba(0, 0, 0, 0.7);
+                    margin-bottom: 0;
+                    line-height: 1;
+                }
+            }
+        }
 }

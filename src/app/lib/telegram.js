@@ -4,7 +4,7 @@
 export async function sendToTelegram(order, orderId) {
   console.log(order.items);
   const items = order.items
-    .map((i) => `${i.title} × ${i.quantity} = ${i.price * i.quantity} ₽`)
+    .map((i) => `${i.title} ${i.color} ${i.size} × ${i.quantity} = ${i.price * i.quantity} ₽`)
     .join("\n");
 
   const msg = `

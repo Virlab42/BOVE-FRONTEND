@@ -27,10 +27,8 @@ export const metadata = {
 export default function MainBlog(){
     return (
         <>
-            <section className='blog'>
-              <h1>Блог</h1>
-              <h3>Скоро здесь появятся новости и статьи</h3>
-              {/* <BlogComponent /> */}
+            <section>
+              <BlogComponent />
             </section>
         </>
         

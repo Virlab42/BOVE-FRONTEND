@@ -57,8 +57,8 @@ export default function Header() {
             window.removeEventListener("scroll", handleScroll);
         };
     }, [lastScrollTop]);
-
-    const isNonHomePage = pathname !== '/';
+    const isBlogPostPage = /^\/blog\/[^/]+$/.test(pathname);
+    const isNonHomePage = pathname !== '/' && !isBlogPostPage;
     const headerClasses = `all-header animate ${isFixed ? '' : 'translate'} ${isDark || isNonHomePage ? 'dark' : ''}`;
 
     return (

@@ -66,7 +66,7 @@ export default function BlogComponent() {
   return (
     <>
       <div className="blog">
-      <h3>Блог</h3>
+              <h1>Блог</h1>
       <div className="blog-cards page">
         {filteredArticles.length > 0 ? (
           filteredArticles.slice(0, displayedArticlesCount).map((article) => (
@@ -76,7 +76,7 @@ export default function BlogComponent() {
                 href={`/blog/${article.url}`}
               >
               <img
-                src={`/Blog/${encodeURIComponent(article.photo)}.webp`}
+                src={`/Blog/${encodeURIComponent(article.photo)}`}
                 alt={article.title}
               /></Link>
               <Link
@@ -85,7 +85,7 @@ export default function BlogComponent() {
               >
                 <p className='card-title'>{article.title}</p>
               </Link>
-              {/* <p>{article.description}</p> */}
+                <p className='card-desc'>{article.description}</p>
             </div>
           ))
         ) : (
