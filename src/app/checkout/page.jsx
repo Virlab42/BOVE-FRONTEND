@@ -10,6 +10,9 @@ export default function CheckoutPage() {
   const { cart, clear } = useCart();
   const router = useRouter();
 
+  const [promoCode, setPromoCode] = useState(null);
+  const [discount, setDiscount] = useState(0);
+
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
@@ -35,9 +38,21 @@ export default function CheckoutPage() {
     }
     return 300;
   };
-
+  const discountValue = promoCode
+    ? Math.round((total * discount) / 100)
+    : 0;
   const deliveryCost = calculateDeliveryCost();
-  const finalTotal = total;
+  const finalTotal = total - discountValue;
+
+  useEffect(() => {
+  const savedPromo = localStorage.getItem("cart_promo_code");
+  const savedDiscount = localStorage.getItem("cart_promo_discount");
+
+  if (savedPromo && savedDiscount) {
+    setPromoCode(savedPromo);
+    setDiscount(Number(savedDiscount));
+  }
+}, []);
 
   // Маска для телефона
   useEffect(() => {
@@ -387,6 +402,12 @@ export default function CheckoutPage() {
               <span>Товары:</span>
               <span>{total} ₽</span>
             </div>
+            {promoCode && (
+              <div className="total-row discount">
+                <span>Скидка ({discount}%):</span>
+                <span>-{discountValue} ₽</span>
+              </div>
+            )}
             <hr />
             <div className="total-row final-total">
               <span>Итого:</span>
