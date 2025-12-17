@@ -13,6 +13,8 @@ export default function CartPage() {
   const [promoApplied, setPromoApplied] = useState(false);
   const [promoMessage, setPromoMessage] = useState("");
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
   // === Загрузка сохранённого промокода ===
   useEffect(() => {
     const savedPromo = localStorage.getItem("cart_promo_code");
@@ -44,7 +46,7 @@ export default function CartPage() {
 
     try {
       const res = await fetch(
-        `${env.process.NEXT_PUBLIC_API_URL}/promocode?promo_code=${promo}`
+        `${API_URL}/promocode?promo_code=${promo}`
       );
 
       const data = await res.json();
