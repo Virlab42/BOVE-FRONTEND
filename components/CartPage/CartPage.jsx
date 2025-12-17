@@ -44,7 +44,7 @@ export default function CartPage() {
 
     try {
       const res = await fetch(
-        `http://89.169.47.16:8000/promocode?promo_code=${promo}`
+        `${env.process.NEXT_PUBLIC_API_URL}/promocode?promo_code=${promo}`
       );
 
       const data = await res.json();
