@@ -456,21 +456,6 @@ export default function CheckoutPage() {
                           <input
                             type="radio"
                             name="moscowDeliveryOption"
-                            value="showroom"
-                            checked={moscowDeliveryOption === "showroom"}
-                            onChange={(e) =>
-                              setMoscowDeliveryOption(e.target.value)
-                            }
-                          />
-                          <span>Доставка до шоурума — 1500 руб.</span>
-                        </label>
-                      </div>
-
-                      <div className="moscow-option">
-                        <label className="moscow-option-label">
-                          <input
-                            type="radio"
-                            name="moscowDeliveryOption"
                             value="mkad10km"
                             checked={moscowDeliveryOption === "mkad10km"}
                             onChange={(e) =>
