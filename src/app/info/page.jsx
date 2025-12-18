@@ -146,7 +146,7 @@ export default function InfoPage() {
             Доставка
             <span
               className={`accordion-icon ${
-                openSection === "stores" ? "open" : ""
+                openSection === "delivery" ? "open" : ""
               }`}
             >
               ▼
@@ -154,7 +154,7 @@ export default function InfoPage() {
           </button>
           <div
             className={`accordion-body ${
-              openSection === "stores" ? "open" : ""
+              openSection === "delivery" ? "open" : ""
             }`}
           >
             <p>
@@ -182,7 +182,7 @@ export default function InfoPage() {
             Возврат
             <span
               className={`accordion-icon ${
-                openSection === "stores" ? "open" : ""
+                openSection === "return" ? "open" : ""
               }`}
             >
               ▼
@@ -190,7 +190,7 @@ export default function InfoPage() {
           </button>
           <div
             className={`accordion-body ${
-              openSection === "stores" ? "open" : ""
+              openSection === "return" ? "open" : ""
             }`}
           >
             <p>
