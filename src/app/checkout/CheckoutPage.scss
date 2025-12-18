@@ -1,9 +1,9 @@
-@import '/public/const.scss';
+@import "/public/const.scss";
 
 .cdek-widget-section {
   width: 100% !important;
 }
-.hidden-field{
+.hidden-field {
   position: absolute;
   opacity: 0;
   pointer-events: none;
@@ -117,7 +117,7 @@
     gap: 10px;
     margin-bottom: 10px;
 
-    input[type='radio'] {
+    input[type="radio"] {
       margin: 0;
     }
 
@@ -309,16 +309,115 @@
     border-radius: 0px;
     cursor: pointer;
     transition: all 0.3s ease;
-    .form-group{
+    .form-group {
       width: 100%;
     }
     &:hover {
       border-color: $Vinous;
     }
 
-    input[type='radio'] {
+    input[type="radio"] {
       margin-right: 15px;
       margin-top: 2px;
+    }
+
+    // Стили для опций доставки по Москве
+    .moscow-delivery-options {
+      margin-top: 15px;
+      padding-left: 30px;
+      width: 100%;
+    }
+
+    .moscow-option {
+      margin-bottom: 10px;
+      padding: 10px;
+      border: 1px solid #e9e9e9;
+      border-radius: 0px;
+      transition: all 0.3s ease;
+
+      &:hover {
+        border-color: $Vinous;
+        background: rgba(165, 0, 52, 0.02);
+      }
+
+      &.selected {
+        border-color: $Vinous;
+        background: rgba(165, 0, 52, 0.05);
+      }
+    }
+
+    .moscow-option-label {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      font-size: 14px;
+      width: 100%;
+
+      input[type="radio"] {
+        margin-right: 12px;
+        width: 18px;
+        height: 18px;
+        accent-color: $Vinous;
+
+        &:checked {
+          background-color: $Vinous;
+        }
+      }
+
+      span {
+        line-height: 1.4;
+        flex: 1;
+        color: #333;
+
+        &:hover {
+          color: $Vinous;
+        }
+      }
+    }
+
+    // Стили для активной опции доставки по Москве
+    .delivery-option[data-moscow-active="true"] {
+      border-color: $Vinous;
+      background: rgba(165, 0, 52, 0.02);
+
+      .delivery-info {
+        .delivery-title {
+          color: $Vinous;
+        }
+      }
+    }
+
+    // Адаптация для мобильных устройств
+    @media (max-width: 768px) {
+      .moscow-delivery-options {
+        padding-left: 15px;
+      }
+
+      .moscow-option {
+        padding: 8px;
+      }
+
+      .moscow-option-label {
+        font-size: 13px;
+
+        input[type="radio"] {
+          margin-right: 8px;
+          width: 16px;
+          height: 16px;
+        }
+      }
+    }
+
+    // Стили для выбранной опции (если нужно выделение)
+    .moscow-option-label input[type="radio"]:checked + span {
+      font-weight: 600;
+      color: $Vinous;
+    }
+
+    // Для ясности, добавьте этот стиль чтобы показать какая опция выбрана
+    .moscow-option.selected .moscow-option-label span {
+      font-weight: 600;
+      color: $Vinous;
     }
 
     .delivery-info {
@@ -327,7 +426,7 @@
       align-items: flex-start;
       gap: 5px;
       width: 100%;
-      .delivery-info-text{
+      .delivery-info-text {
         display: flex;
         flex-direction: column;
       }
@@ -346,7 +445,7 @@
       }
     }
 
-    input[type='radio']:checked + .delivery-info {
+    input[type="radio"]:checked + .delivery-info {
       .delivery-title {
         color: $Vinous;
       }
@@ -389,7 +488,7 @@
         background: #f9f9f9;
       }
 
-      input[type='radio'] {
+      input[type="radio"] {
         margin-right: 10px;
         margin-top: 2px;
       }
@@ -520,7 +619,7 @@
 .widget-container {
   position: relative;
   width: 100%;
-  input{
+  input {
     background-color: transparent;
   }
 }
@@ -595,10 +694,10 @@
   .checkout-page {
     padding: 125px 0px 80px 0px;
   }
-  .widget-container{
+  .widget-container {
     padding-bottom: 40px;
   }
-  .selected-point-info{
+  .selected-point-info {
     margin-top: 40px;
   }
   .form-row {
@@ -609,7 +708,7 @@
   .form-section {
     padding: 10px !important;
   }
-  .submit-order-btn{
+  .submit-order-btn {
     margin: 0px 10px;
   }
 }

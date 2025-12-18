@@ -1,6 +1,5 @@
 import ProductPage from "./ProductPage";
 
-
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 // ======== Server Fetch ========
 async function getProduct(productId) {
@@ -14,7 +13,7 @@ async function getProduct(productId) {
 
 // ======== Metadata Generation ========
 export async function generateMetadata({ params, searchParams }) {
-  const productId = searchParams.id;
+  const { id: productId } = await searchParams;
   if (!productId) return { title: "Товар" };
 
   const data = await getProduct(productId);
@@ -38,8 +37,7 @@ export async function generateMetadata({ params, searchParams }) {
 
 // ======== Page Component ========
 export default async function Page({ params, searchParams }) {
-  const productId = searchParams.id;
-  const variantId = searchParams.variant_id;
+  const { id: productId, variant_id: variantId } = await searchParams;
 
   const data = await getProduct(productId);
 
