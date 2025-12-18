@@ -1,17 +1,17 @@
-@import '/public/const.scss/';
+@import "/public/const.scss/";
 
 .info-page {
   padding: 100px 80px 40px;
   max-width: 1200px;
   margin: 0 auto;
-min-height: 75vh;
-@media (max-width: 768px){
+  min-height: 100vh;
+  @media (max-width: 768px) {
     padding: 80px 3vw 80px !important;
-    &__title{
-        font-size: 30px !important;
-        margin-bottom: 20px !important;
+    &__title {
+      font-size: 30px !important;
+      margin-bottom: 20px !important;
     }
-}
+  }
   &__title {
     font-size: 36px;
     font-weight: 600;
