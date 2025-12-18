@@ -141,7 +141,7 @@ export default function InfoPage() {
         <div className="accordion-item">
           <button
             className="accordion-header"
-            onClick={() => toggleSection("stores")}
+            onClick={() => toggleSection("delivery")}
           >
             Доставка
             <span
@@ -177,7 +177,7 @@ export default function InfoPage() {
         <div className="accordion-item">
           <button
             className="accordion-header"
-            onClick={() => toggleSection("stores")}
+            onClick={() => toggleSection("return")}
           >
             Возврат
             <span
