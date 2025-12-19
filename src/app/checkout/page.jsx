@@ -539,8 +539,15 @@ export default function CheckoutPage() {
                   rel="noopener noreferrer"
                 >
                   политикой конфиденциальности
+                </a>{" "}
+                и{" "}
+                <a
+                  href="/docs/политика_конфиденциальности.pdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  правилами возврата и обмена товаров
                 </a>
-                *
               </label>
             </div>
 

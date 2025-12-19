@@ -1,13 +1,13 @@
-@import '/public/const.scss';
+@import "/public/const.scss";
 
 .contacts-page {
   padding: 100px 80px 20px;
   max-width: 1200px;
   min-height: 75vh;
   margin: 0 auto;
-@media (max-width: 768px){
+  @media (max-width: 768px) {
     padding: 80px 3vw 80px !important;
-}
+  }
   &__title {
     font-size: 36px;
     font-weight: 500;
@@ -37,22 +37,21 @@
     }
   }
 
-      .contacts-page__label {
-        font-weight: 500;
-        color: #333;
-      }
+  .contacts-page__label {
+    font-weight: 500;
+    color: #333;
+  }
 
-      .contacts-page__link {
-        font-weight: 600 !important;
-        text-decoration: underline;
-        color: black;
-        transition: color 0.3s ease;
-        &:hover{
-            color: $Vinous;
-        }
-      }
+  .contacts-page__link {
+    font-weight: 600 !important;
+    text-decoration: underline;
+    color: black;
+    transition: color 0.3s ease;
+    &:hover {
+      color: $Vinous;
+    }
+  }
   &__stores {
-
     &-title {
       font-size: 28px;
       font-weight: 600;
