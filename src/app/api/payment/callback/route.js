@@ -1,77 +1,61 @@
 import { NextResponse } from "next/server";
-import crypto from "crypto";
 import { getOrder, updateOrder, deleteOrder } from "@/app/lib/orderStore";
 import { sendToTelegram } from "@/app/lib/telegram";
 
-export async function POST(req) {
+export async function GET(req) {
   try {
-    // Получаем тело как текст (важно для подписи)
-    const bodyText = await req.text();
-    const body = JSON.parse(bodyText);
-    console.log("ОТВЕТ АЛЬФЫ", body); 
-    
-    // ==== Проверка подписи симметричной ==== 
-    const tokenHeader =
-      req.headers.get("x-token") ||
-      req.headers.get("token") ||
-      req.headers.get("X-Token");
+    const { searchParams } = new URL(req.url);
 
-    if (!tokenHeader) {
-      console.log("❌ No signature header");
-      return NextResponse.json({ ok: false }, { status: 400 });
-    }
+    const orderId = searchParams.get("orderNumber");
+    const status = searchParams.get("status");
+    const operation = searchParams.get("operation");
 
-    const expectedSignature = crypto
-      .createHmac("sha256", process.env.ALFABANK_CALLBACK_TOKEN)
-      .update(bodyText)
-      .digest("hex");
+    console.log("🔥 ALFA CALLBACK", {
+      orderId,
+      status,
+      operation,
+      raw: Object.fromEntries(searchParams),
+    });
 
-    if (expectedSignature !== tokenHeader) {
-      console.log("❌ Invalid signature");
-      return NextResponse.json({ ok: false }, { status: 401 });
-    }
-
-    console.log("🔥 Callback received:", body);
-
-    // Альфа присылает orderNumber, а не orderId
-    const orderId = body.orderNumber;
-    const status = body.status || body.operation;
-
+    // если нет номера заказа — просто отвечаем 200
     if (!orderId) {
-      console.log("❌ No orderNumber in callback");
       return NextResponse.json({ ok: true });
     }
 
     const order = getOrder(orderId);
     if (!order) {
-      console.log("❌ Order not found:", orderId);
+      console.log("⚠️ Order not found:", orderId);
       return NextResponse.json({ ok: true });
     }
 
-    // === Проверка успешного списания ===
-    // У Альфы успешный статус — "1" или operation="deposited"
+    // у Альфы успешная оплата
     const isPaid =
       status === "1" ||
       status === "PAID" ||
-      body.operation === "deposited";
+      operation === "deposited";
 
-    if (isPaid) {
-      updateOrder(orderId, { status: "paid" });
-
-      // отправка заказа в Telegram
-      await sendToTelegram(order, orderId);
-
-      // удаление заказа из временного хранилища
-      deleteOrder(orderId);
-
-      console.log("✅ Order marked as PAID:", orderId);
-    } else {
-      console.log("⚠️ Status not paid:", status);
+    if (!isPaid) {
+      console.log("⚠️ Payment not successful:", status, operation);
+      return NextResponse.json({ ok: true });
     }
+
+    // защита от повторных callback'ов
+    if (order.status === "paid") {
+      console.log("♻️ Order already paid:", orderId);
+      return NextResponse.json({ ok: true });
+    }
+
+    updateOrder(orderId, { status: "paid" });
+
+    await sendToTelegram(order, orderId);
+    deleteOrder(orderId);
+
+    console.log("✅ Order PAID:", orderId);
 
     return NextResponse.json({ ok: true });
   } catch (e) {
-    console.error("❌ Callback error:", e);
-    return NextResponse.json({ ok: false });
+    console.error("❌ Alfa callback error:", e);
+    // даже при ошибке лучше вернуть 200, чтобы Альфа не долбила повторно
+    return NextResponse.json({ ok: true });
   }
 }

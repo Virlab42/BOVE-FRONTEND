@@ -245,7 +245,7 @@ export default function CheckoutPage() {
       const result = await response.json();
 
       if (result.success) {
-        clear();
+        //clear();
         window.location.href = result.paymentUrl;
       } else {
         alert("Ошибка при оформлении заказа");

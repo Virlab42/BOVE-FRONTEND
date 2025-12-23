@@ -12,7 +12,8 @@ export async function POST(req) {
     const order = await req.json();
     const orderId = "ORD-" + Date.now();
 
-    sendToTelegram(order, orderId);
+    saveOrder(orderId, order);
+    //sendToTelegram(order, orderId);
     console.log("СОХРАНИЛИ ЗАКАЗ", getOrder(orderId));
 
     // Формируем payload для банка
