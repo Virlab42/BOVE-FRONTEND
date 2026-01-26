@@ -60,9 +60,10 @@ export default function ProductInfo({
   setActiveVariant,
   onOpenSizeGuide,
 }) {
-  const { add } = useCart();
+  const { cart, add } = useCart();
   const { toggleFavourite, isFavourite } = useFavourite();
   console.log(product);
+
 
   // product may be undefined briefly — guard
   const {
@@ -77,6 +78,9 @@ export default function ProductInfo({
     available_sizes,
     available_sizes_id,
   } = product || {};
+
+
+  
 
   // --- Build size map: id -> label (e.g. 4 -> "S-M") ---
   // Handle multiple shapes:
@@ -122,6 +126,12 @@ export default function ProductInfo({
   const defaultSizeId = sizesWithQty.find((s) => s.quantity > 0)?.sizeId ?? null;
   const [selectedSizeId, setSelectedSizeId] = useState(defaultSizeId);
 
+  const inCart = cart.some(i =>
+  Number(i.id) === Number(id) &&
+  Number(i.variant_id) === Number(activeVariantId) &&
+  Number(i.size_id) === Number(selectedSizeId)
+);
+
   // when activeVariant or availability changes, reset selected size to first available
   useEffect(() => {
     setSelectedSizeId(sizesWithQty.find((s) => s.quantity > 0)?.sizeId ?? null);
@@ -140,13 +150,14 @@ export default function ProductInfo({
     if (!selectedSizeId) return;
 
     add({
-      id: id,
-      variant_id: activeVariantId,
+      id: Number(id),
+      variant_id: Number(activeVariantId),
       title: full_name,
       price: activeVariant?.price ?? base_price,
       color: activeVariant?.color,
       // pass readable label:
-      size: sizeMap[selectedSizeId] ?? selectedSizeId,
+      size_id: Number(selectedSizeId),
+      size: sizeMap[selectedSizeId] ?? String(selectedSizeId),
       image: firstImage, // can be null
       url,
     });
@@ -207,10 +218,10 @@ export default function ProductInfo({
       <div className="cart-favourite">
         <button
           className="add-cart"
-          disabled={!selectedSizeId || variantIsOut}
+          disabled={!selectedSizeId || variantIsOut || inCart}
           onClick={handleAddToCart}
         >
-          {variantIsOut ? "Нет в наличии" : "Добавить в корзину"}
+          {variantIsOut ? "Нет в наличии" : inCart ? "В корзине" : "Добавить в корзину"}
         </button>
         <button
           className="favourite-button"

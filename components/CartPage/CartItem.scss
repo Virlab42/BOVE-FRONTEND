@@ -76,6 +76,9 @@
                 background-color: transparent;
                 border: none;
                 color: black;
+                &:disabled{
+                    opacity: .5;
+                }
             }
 
             &-value {

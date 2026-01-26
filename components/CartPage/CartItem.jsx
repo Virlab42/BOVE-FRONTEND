@@ -1,3 +1,4 @@
+// CartItem.jsx
 "use client";
 import { useCart } from "@/context/CartContext";
 import Link from "next/link";
@@ -6,14 +7,13 @@ import Image from "next/image";
 
 export default function CartItem({ item, index }) {
   const { remove, updateQuantity } = useCart();
+  
+  console.log(item);
 
-  const handleDecrement = () => {
-    if (item.quantity > 1) updateQuantity(index, item.quantity - 1);
-  };
+  const isOut = item.available === false; // ✅
+  const isMaxed =
+    typeof item.maxQty === "number" ? item.quantity >= item.maxQty : false; // ✅
 
-  const handleIncrement = () => {
-    updateQuantity(index, item.quantity + 1);
-  };
   return (
     <div className="cart-item">
       <Link href={`${item.url}`} className="cart-item__image-link">
@@ -53,15 +53,33 @@ export default function CartItem({ item, index }) {
             <path d="M8.202 20.325c.019 0 .038 0 .058-.002a1 1 0 0 0 .943-1.056L8.535 7.339a.997.997 0 0 0-1.055-.944 1 1 0 0 0-.943 1.055l.667 11.929a1 1 0 0 0 .998.946zM15.739 20.323c.019.002.038.002.057.002.527 0 .97-.412.999-.946l.666-11.929a1.002 1.002 0 0 0-.943-1.056c-.539-.041-1.024.392-1.055.944l-.667 11.929a1 1 0 0 0 .943 1.056zM12 20.325c.553 0 1.001-.449 1.001-1.001V7.394a1 1 0 1 0-2.002 0v11.931a1 1 0 0 0 1.001 1z"></path>
           </svg>
         </button>
-        <div className="cart-item__quantity">
-          <button className="cart-item__quantity-btn" onClick={handleDecrement}>
-            −
-          </button>
-          <span className="cart-item__quantity-value">{item.quantity}</span>
-          <button className="cart-item__quantity-btn" onClick={handleIncrement}>
-            +
-          </button>
-        </div>
+
+        {isOut ? (
+          <div className="cart-item__out">Нет в наличии</div>
+        ) : (
+          <div className="cart-item__quantity">
+            <button
+            className="cart-item__quantity-btn"
+            disabled={item.quantity == 1 ? true : false}
+              onClick={() =>
+                item.quantity > 1 && updateQuantity(index, item.quantity - 1)
+              }
+            >
+              −
+            </button>
+
+            <span>{item.quantity}</span>
+
+            <button
+            className="cart-item__quantity-btn"
+              onClick={() => !isMaxed && updateQuantity(index, item.quantity + 1)}
+              disabled={isMaxed}
+              title={isMaxed ? "Достигнут лимит по наличию" : ""}
+            >
+              +
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

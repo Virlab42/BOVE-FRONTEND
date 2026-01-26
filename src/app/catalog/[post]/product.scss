@@ -179,6 +179,9 @@
         gap: 10px;
         .add-cart{
           flex: 1;
+          &:disabled{
+            background-color: $Vinous;
+          }
         }
         .favourite-button{
           position: relative !important;

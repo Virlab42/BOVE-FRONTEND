@@ -2,11 +2,13 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useCart } from "@/context/CartContext";
+import { useRouter } from "next/navigation";
 import "./CartPage.scss";
 import CartItem from "./CartItem";
 
 export default function CartPage() {
-  const { cart } = useCart();
+  const { cart, refreshAvailability } = useCart();
+  const router = useRouter();
 
   const [promo, setPromo] = useState("");
   const [discount, setDiscount] = useState(0);
@@ -14,6 +16,21 @@ export default function CartPage() {
   const [promoMessage, setPromoMessage] = useState("");
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
+useEffect(() => {
+  if (cart.length > 0) {
+    refreshAvailability?.();
+  }
+}, [cart.length]);
+
+  const hasOutOfStock = cart.some(i => i.available === false);
+
+  const goCheckout = async () => {
+   await refreshAvailability?.(); // финальная проверка
+  const stillBad = cart.some(i => i.available === false);
+   if (stillBad) return;
+    router.push("/checkout");
+  };
 
   // === Загрузка сохранённого промокода ===
   useEffect(() => {
@@ -174,9 +191,19 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL;
           <span>{totalWithDiscount} ₽</span>
         </div>
 
-        <Link href="/checkout" className="checkout-btn">
-          Выбрать способ получения
-        </Link>
+        <button
+     className="checkout-btn"
+     onClick={goCheckout}
+     disabled={cart.length === 0 || hasOutOfStock}
+   >
+     Выбрать способ получения
+   </button>
+
+   {hasOutOfStock && (
+     <div className="promo-message error" style={{ marginTop: 12 }}>
+       В корзине есть товары, которых нет в наличии. Удалите их, чтобы продолжить оформление.
+    </div>
+   )}
       </div>
     </div>
   );
