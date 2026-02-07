@@ -193,10 +193,20 @@
       margin-bottom: 0;
     }
     .price {
-      font-size: 32px;
-      font-weight: 600;
-      line-height: 1;
-    }
+  font-size: 32px;
+  font-weight: 600;
+  line-height: 1;
+
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+
+  .price-old {
+    text-decoration: line-through;
+    opacity: 0.55;
+    font-weight: 400;
+  }
+}
 
     .choose {
       display: flex;

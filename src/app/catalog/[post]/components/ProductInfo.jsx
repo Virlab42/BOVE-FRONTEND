@@ -79,6 +79,16 @@ export default function ProductInfo({
     available_sizes_id,
   } = product || {};
 
+  // --- Price logic: variant price overrides base price ---
+const basePriceNum = Number(base_price) || 0;
+
+// API отдаёт price_variant, но на всякий поддержим и price
+const variantPriceNum =
+  Number(activeVariant?.price_variant ?? activeVariant?.price) || 0;
+
+const currentPrice = variantPriceNum > 0 ? variantPriceNum : basePriceNum;
+const hasDiscount =
+  variantPriceNum > 0 && basePriceNum > 0 && variantPriceNum !== basePriceNum;
 
   
 
@@ -153,7 +163,7 @@ export default function ProductInfo({
       id: Number(id),
       variant_id: Number(activeVariantId),
       title: full_name,
-      price: activeVariant?.price ?? base_price,
+      price: currentPrice,
       color: activeVariant?.color,
       // pass readable label:
       size_id: Number(selectedSizeId),
@@ -165,8 +175,22 @@ export default function ProductInfo({
 
   return (
     <div className="product-page__info">
-      <h1 className="title">{full_name}</h1>
-      <div className="price">{base_price > 0 ? `${base_price} ₽` : "Скоро будет"}</div>
+      <h1 className="title">{full_name} {activeVariant?.name_for_colors ? ` ${activeVariant.name_for_colors}` : ""}</h1>
+      <div className="price">
+  {currentPrice > 0 ? (
+    hasDiscount ? (
+      <>
+        <span className="price-current">{parseInt(currentPrice)} ₽</span>
+        <span className="price-old">{parseInt(basePriceNum)} ₽</span>
+      </>
+    ) : (
+      <span className="price-current">{parseInt(currentPrice)} ₽</span>
+    )
+  ) : (
+    "Скоро будет"
+  )}
+</div>
+
 
       {/* ==== Цвета ==== */}
       <div className="choose">
@@ -234,7 +258,7 @@ export default function ProductInfo({
               colorName: activeVariant?.color,
               img: firstImage,
               productId: id,
-              price: activeVariant?.price ?? base_price
+              price: currentPrice,
             });
           }}
         >

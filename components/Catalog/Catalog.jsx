@@ -123,7 +123,8 @@ export default function Catalog({ initialCat }) {
       variant_id: v.id,
       full_name: p.full_name,
       category_id: p.category_id,
-      price: p.base_price,
+      price: v.price_variant ?? p.base_price,
+      base_price: p.base_price,
       color: v.color,
       name_for_colors: v.name_for_colors,
       hex_color: v.hex_color,
@@ -246,7 +247,23 @@ export default function Catalog({ initialCat }) {
 
               <div className="product-card__title">{product.full_name} {product.name_for_colors}</div>
               <div className="product-card__price">
-                {product.price > 0 ? `${parseInt(product.price)} ₽` : "Скоро будет"}
+                {(() => {
+    const current = Number(product.price) || 0;
+    const base = Number(product.base_price) || 0;
+
+    if (current <= 0 && base <= 0) return "Скоро будет";
+
+    const showDiscount = current > 0 && base > 0 && current !== base;
+
+    return showDiscount ? (
+      <>
+        <span className="price-current">{parseInt(current)} ₽</span>
+        <span className="price-old">{parseInt(base)} ₽</span>
+      </>
+    ) : (
+      <span className="price-current">{parseInt(current || base)} ₽</span>
+    );
+  })()}
               </div>
             </Link>
           ))}

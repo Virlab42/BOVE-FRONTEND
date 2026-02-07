@@ -97,6 +97,9 @@
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 20px;
+      @media screen and (max-width: 1200px) {
+        grid-template-columns: repeat(2, 1fr);
+      }
   }
 }
 
@@ -155,8 +158,23 @@
 
   &__title,
   &__price {
-    font-size: 16px;
-    line-height: 1;
+    font-weight: 500;
+    color: $Vinous;
+    display: flex;
+    gap: 10px;
+    align-items: baseline;
+    @media screen and (max-width: 700px){
+      gap: 5px;
+    }
+    .price-old {
+      text-decoration: line-through;
+      opacity: 0.55;
+      font-weight: 400;
+      font-size: 14px;
+      @media screen and (max-width: 700px){
+        font-size: 11px;
+      }
+    }
   }
 
   &__title {
