@@ -130,6 +130,8 @@ export default function CheckoutPage() {
       newErrors.name = "Введите имя";
     }
 
+    /*
+    // Временно отключаем валидацию доставки
     if (deliveryMethod === "cdek") {
       if (!selectedPoint) {
         newErrors.delivery = "Выберите пункт выдачи СДЭК";
@@ -137,12 +139,13 @@ export default function CheckoutPage() {
     } else if (!formData.address.trim()) {
       newErrors.address = "Введите адрес";
     }
+    */
 
     if (!formData.phone.trim()) {
       newErrors.phone = "Введите телефон";
     } else if (
       !/^[\+]?[78][-\s]?\(?\d{3}\)?[-\s]?\d{3}[-\s]?\d{2}[-\s]?\d{2}$/.test(
-        formData.phone
+        formData.phone,
       )
     ) {
       newErrors.phone = "Введите корректный телефон";
@@ -183,6 +186,7 @@ export default function CheckoutPage() {
     setIsLoading(true);
 
     try {
+      /*
       let deliveryDescription = "";
       if (deliveryMethod === "moscowCourier") {
         switch (moscowDeliveryOption) {
@@ -207,6 +211,7 @@ export default function CheckoutPage() {
       } else if (deliveryMethod === "cdek") {
         deliveryDescription = "Доставка СДЭК";
       }
+      */
 
       const orderData = {
         customer: {
@@ -214,6 +219,7 @@ export default function CheckoutPage() {
           phone: formData.phone,
           email: formData.email,
         },
+        /*
         delivery: {
           method: deliveryMethod,
           point: deliveryMethod === "cdek" ? selectedPoint : null,
@@ -229,6 +235,7 @@ export default function CheckoutPage() {
               ? "Пункт выдачи СДЭК (оплачивается отдельно при получении)"
               : "Самовывоз",
         },
+        */
         items: cart,
         total: finalTotal,
         date: new Date().toISOString(),
@@ -265,9 +272,9 @@ export default function CheckoutPage() {
     cleanedPhone.length === 11 &&
     formData.email.trim().length > 0 &&
     /^\S+@\S+\.\S+$/.test(formData.email) &&
-    formData.address.trim().length > 0 &&
-    deliveryMethod.trim().length > 0 &&
-    (deliveryMethod !== "cdek" || selectedPoint) &&
+    //formData.address.trim().length > 0 && // Временно отключаем проверку адреса
+    //deliveryMethod.trim().length > 0 && // Временно отключаем проверку способа доставки
+    //(deliveryMethod !== "cdek" || selectedPoint) && // Временно отключаем проверку СДЭК
     agreed;
 
   if (cart.length === 0) {
@@ -336,6 +343,7 @@ export default function CheckoutPage() {
                     <span className="error-text">{errors.email}</span>
                   )}
                 </div>
+                {/* Временно скрываем поле адреса
                 <div className="form-group hidden-field">
                   <input
                     type="text"
@@ -353,9 +361,11 @@ export default function CheckoutPage() {
                     <span className="error-text">{errors.address}</span>
                   )}
                 </div>
+                */}
               </div>
             </div>
 
+            {/* Весь блок с доставкой временно закомментирован 
             <div className="form-section">
               <h2>Способ получения</h2>
 
@@ -524,6 +534,7 @@ export default function CheckoutPage() {
                 </label>
               </div>
             </div>
+            */}
 
             <div className="form-group checkout-agreement">
               <label>
