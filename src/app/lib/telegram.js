@@ -1,52 +1,87 @@
-//const TELEGRAM_BOT_TOKEN = "8001734265:AAFFTF2qy3-7W6xh9L2Ht-pr4Gwyp4TwA1k";
-//const TELEGRAM_CHAT_ID = "-4809235355";
+const TELEGRAM_BOT_TOKEN = "8001734265:AAFFTF2qy3-7W6xh9L2Ht-pr4Gwyp4TwA1k";
+const TELEGRAM_CHAT_ID = "-4809235355";
 
 export async function sendToTelegram(order, orderId) {
-  console.log(order.items);
+  try {
+    console.log(`📤 Начинаем отправку заказа #${orderId} в Telegram...`);
 
-  let deliveryInfo = "";
-  if (order.delivery.method === "moscowCourier") {
-    deliveryInfo = `Курьерская доставка по Москве\n${order.delivery.details}`;
-  } else if (order.delivery.method === "cdek") {
-    deliveryInfo = `Доставка СДЭК\nАдрес пункта выдачи: ${order.delivery.address}`;
-  } else {
-    deliveryInfo = "Самовывоз";
-  }
-
-  const items = order.items
-    .map(
-      (i) =>
-        `${i.title} ${i.color} ${i.size} × ${i.quantity} = ${
-          i.price * i.quantity
-        } ₽`
-    )
-    .join("\n");
-
-  const msg = `
-<b>Заказ #${orderId}</b>
-<b>Имя:</b> ${order.customer.name}
-<b>Телефон:</b> ${order.customer.phone}
-<b>Email:</b> ${order.customer.email}
-<b>Способ доставки:</b> ${deliveryInfo}
-<b>Адрес:</b> ${order.delivery.address}
-<b>Стоимость доставки:</b> ${order.delivery.cost} ₽
-
-<b>Итого к оплате:</b> ${order.total} ₽
-
-<b>Товары:</b>
-${items}
-  `;
-
-  await fetch(
-    `https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}/sendMessage`,
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        chat_id: process.env.TELEGRAM_CHAT_ID,
-        text: msg,
-        parse_mode: "HTML",
-      }),
+    // Проверяем наличие обязательных полей
+    if (!order || !order.customer) {
+      throw new Error("Некорректные данные заказа");
     }
-  );
+
+    // Формируем список товаров с проверкой наличия полей
+    const itemsList =
+      order.items && order.items.length > 0
+        ? order.items
+            .map((item) => {
+              const name = item.name || item.title || "Товар";
+              const size = item.size ? ` (Размер: ${item.size})` : "";
+              const color = item.color ? ` (Цвет: ${item.color})` : "";
+              const quantity = item.quantity || 1;
+              const price = item.price || 0;
+              return `• ${name}${size}${color} — ${quantity} шт. × ${price} ₽ = ${price * quantity} ₽`;
+            })
+            .join("\n")
+        : "Нет товаров";
+
+    // Информация о доставке (с проверкой наличия)
+    let deliveryInfo = "Доставка не выбрана";
+    if (order.delivery && order.delivery.method) {
+      if (order.delivery.method === "moscowCourier") {
+        deliveryInfo = `Курьерская доставка по Москве\nАдрес: ${order.delivery.address || "не указан"}`;
+      } else if (order.delivery.method === "cdek") {
+        deliveryInfo = `Доставка СДЭК\nПункт выдачи: ${order.delivery.address || "не выбран"}`;
+      }
+    }
+
+    const msg = `
+✅ <b>НОВЫЙ ЗАКАЗ #${orderId}</b>
+
+👤 <b>Клиент:</b>
+Имя: ${order.customer.name || "не указано"}
+Телефон: ${order.customer.phone || "не указан"}
+Email: ${order.customer.email || "не указан"}
+
+📦 <b>Товары:</b>
+${itemsList}
+
+🚚 <b>Доставка:</b>
+${deliveryInfo}
+
+💰 <b>Итого к оплате:</b> ${order.total || 0} ₽
+
+📅 ${new Date().toLocaleString("ru-RU")}
+    `;
+
+    console.log(
+      `📝 Сообщение для Telegram сформировано, длина: ${msg.length} символов`,
+    );
+
+    const response = await fetch(
+      `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          chat_id: TELEGRAM_CHAT_ID,
+          text: msg,
+          parse_mode: "HTML",
+        }),
+      },
+    );
+
+    const result = await response.json();
+
+    if (result.ok) {
+      console.log(`✅ Заказ #${orderId} успешно отправлен в Telegram`);
+      return true;
+    } else {
+      console.error("❌ Ошибка Telegram API:", result);
+      return false;
+    }
+  } catch (error) {
+    console.error(`❌ Ошибка отправки заказа #${orderId} в Telegram:`, error);
+    return false; // Возвращаем false, но не пробрасываем ошибку
+  }
 }
