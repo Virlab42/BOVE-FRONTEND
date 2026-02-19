@@ -12,7 +12,6 @@ export async function POST(req) {
 
     // Сохраняем заказ
     saveOrder(orderId, order);
-    console.log("✅ Заказ сохранен:", orderId);
 
     // Отправляем в Telegram (НЕ ждем завершения, чтобы не задерживать ответ)
     // sendToTelegram(order, orderId).catch((err) => {

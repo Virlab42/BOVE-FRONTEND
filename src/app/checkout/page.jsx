@@ -328,14 +328,7 @@ export default function CheckoutPage() {
           details: "Доставка бесплатная",
         },
         */
-        items: cart.map((item) => ({
-          id: item.id,
-          name: item.name,
-          price: item.price,
-          quantity: item.quantity,
-          size: item.size,
-          color: item.color,
-        })),
+        items: cart,
         subtotal: total,
         discount: {
           code: promoCode,
