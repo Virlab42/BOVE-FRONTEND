@@ -12,18 +12,14 @@ export async function sendToTelegram(order, orderId) {
 
     // Формируем список товаров с проверкой наличия полей
     const itemsList =
-      order.items && order.items.length > 0
-        ? order.items
-            .map((item) => {
-              const name = item.name || item.title || "Товар";
-              const size = item.size ? ` (Размер: ${item.size})` : "";
-              const color = item.color ? ` (Цвет: ${item.color})` : "";
-              const quantity = item.quantity || 1;
-              const price = item.price || 0;
-              return `• ${name}${size}${color} — ${quantity} шт. × ${price} ₽ = ${price * quantity} ₽`;
-            })
-            .join("\n")
-        : "Нет товаров";
+      order.items
+    .map(
+      (i) =>
+        `${i.title} ${i.color} ${i.size} × ${i.quantity} = ${
+          i.price * i.quantity
+        } ₽`
+    )
+    .join("\n");
 
     // Информация о доставке (с проверкой наличия)
     let deliveryInfo = "Доставка не выбрана";

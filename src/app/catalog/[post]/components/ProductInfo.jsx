@@ -131,6 +131,7 @@ const hasDiscount =
   });
 
   const variantIsOut = sizesWithQty.length === 0 || sizesWithQty.every((s) => s.quantity === 0);
+  const variantIsOne = sizesWithQty.every((s) => s.quantity === 1);
 
   // default initial size id (the id, not label)
   const defaultSizeId = sizesWithQty.find((s) => s.quantity > 0)?.sizeId ?? null;
@@ -176,6 +177,9 @@ const hasDiscount =
   return (
     <div className="product-page__info">
       <h1 className="title">{full_name} {activeVariant?.name_for_colors ? ` ${activeVariant.name_for_colors}` : ""}</h1>
+      {variantIsOne && (
+              <span>Осталась 1 шт.</span>
+            )}
       <div className="price">
   {currentPrice > 0 ? (
     hasDiscount ? (
