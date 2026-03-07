@@ -1,5 +1,5 @@
 const TELEGRAM_BOT_TOKEN = "8001734265:AAFFTF2qy3-7W6xh9L2Ht-pr4Gwyp4TwA1k";
-const TELEGRAM_CHAT_ID = "-4809235355";
+const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID;
 
 export async function sendToTelegram(order, orderId) {
   try {
