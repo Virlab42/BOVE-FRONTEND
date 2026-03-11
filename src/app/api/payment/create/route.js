@@ -14,9 +14,9 @@ export async function POST(req) {
     saveOrder(orderId, order);
 
     // Отправляем в Telegram (НЕ ждем завершения, чтобы не задерживать ответ)
-    sendToTelegram(order, orderId).catch((err) => {
-       console.error("❌ Ошибка отправки в Telegram (фоновая):", err);
-     });
+    //sendToTelegram(order, orderId).catch((err) => {
+       //console.error("❌ Ошибка отправки в Telegram (фоновая):", err);
+     //});
 
     // Формируем payload для банка
     const payload = new URLSearchParams({
