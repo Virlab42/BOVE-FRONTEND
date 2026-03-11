@@ -84,7 +84,7 @@ useEffect(() => {
         discountValue.toString()
       );
     } catch (err) {
-      setPromoMessage(err.message);
+      setPromoMessage("Промокод не действует или введён неверно");
       setPromoApplied(false);
       setDiscount(0);
     }
