@@ -38,8 +38,8 @@ export async function POST(request) {
 
 class CDEKService {
   constructor() {
-    this.login = "WFCrgWDvc92QvChUnJAEymD0VdSKoO44";
-    this.secret = "0OjXOkQx8SwVXPu1ElBce0BJmEkAjILy";
+    this.login = "QeiBus1oDFStcyvln3XKYXWvbxDRAEbc";
+    this.secret = "9xZM2fZE8S4vUyf1TJH9OxOVukoTSp71";
     this.baseUrl = "https://api.cdek.ru/v2";
     this.authToken = null;
     this.metrics = [];

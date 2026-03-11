@@ -3,12 +3,12 @@
 $service = new service(/**
  * Вставьте свой аккаунт\идентификатор для интеграции
  * Put your account for integration here
- */ 'WFCrgWDvc92QvChUnJAEymD0VdSKoO44',
+ */ 'QeiBus1oDFStcyvln3XKYXWvbxDRAEbc',
 
     /**
      * Вставьте свой пароль для интеграции
      * Put your password for integration here
-     */ '0OjXOkQx8SwVXPu1ElBce0BJmEkAjILy');
+     */ '9xZM2fZE8S4vUyf1TJH9OxOVukoTSp71');
 $service->process($_GET, file_get_contents('php://input'));
 
 class service

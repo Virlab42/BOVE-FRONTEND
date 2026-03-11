@@ -9,8 +9,8 @@ export async function POST(request) {
       },
       body: new URLSearchParams({
         grant_type: "client_credentials",
-        client_id: "WFCrgWDvc92QvChUnJAEymD0VdSKoO44",
-        client_secret: "0OjXOkQx8SwVXPu1ElBce0BJmEkAjILy",
+        client_id: "QeiBus1oDFStcyvln3XKYXWvbxDRAEbc",
+        client_secret: "9xZM2fZE8S4vUyf1TJH9OxOVukoTSp71",
       }),
     });
 

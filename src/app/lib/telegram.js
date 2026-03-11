@@ -23,13 +23,13 @@ export async function sendToTelegram(order, orderId) {
 
     // Информация о доставке (с проверкой наличия)
     let deliveryInfo = "Доставка не выбрана";
-    // if (order.delivery && order.delivery.method) {
-    //   if (order.delivery.method === "moscowCourier") {
-    //     deliveryInfo = `Курьерская доставка по Москве\nАдрес: ${order.delivery.address || "не указан"}`;
-    //   } else if (order.delivery.method === "cdek") {
-    //     deliveryInfo = `Доставка СДЭК\nПункт выдачи: ${order.delivery.address || "не выбран"}`;
-    //   }
-    // }
+    if (order.delivery && order.delivery.method) {
+       if (order.delivery.method === "moscowCourier") {
+         deliveryInfo = `Курьерская доставка по Москве\nАдрес: ${order.delivery.address || "не указан"}`;
+       } else if (order.delivery.method === "cdek") {
+         deliveryInfo = `Доставка СДЭК\nПункт выдачи: ${order.delivery.address || "не выбран"}`;
+       }
+     }
 
     const msg = `
 ✅ <b>НОВЫЙ ЗАКАЗ #${orderId}</b>
