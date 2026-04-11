@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import nodemailer from "nodemailer";
 
 const TELEGRAM_BOT_TOKEN = "8001734265:AAFFTF2qy3-7W6xh9L2Ht-pr4Gwyp4TwA1k";
 const TELEGRAM_CHAT_ID = "-4809235355";
@@ -45,6 +46,27 @@ export async function POST(request) {
 <b>Товары:</b>
 ${itemList}
 `;
+
+    const transporter = nodemailer.createTransport({
+      host: "smtp.yandex.ru",
+      port: 465,
+      secure: true,
+      auth: {
+        user: "sersur42@yandex.ru",
+        pass: "xidetvxcflvenyqk",
+      },
+    });
+
+    const to = "radostev.alexandr42@yandex.ru";
+    // const to = "sersur2007@gmail.com";
+
+    const mailOptions = {
+      from: `"Bove-brand" <sersur42@yandex.ru>`, // ОБЯЗАТЕЛЬНО ваш адрес Яндекса
+      to: to,
+      subject: `Заявка с сайта Bove-brand`,
+      html: message.replace(/\n/g, '<br>'), // Чтобы HTML из Telegram корректно отобразился в почте
+    };
+    await transporter.sendMail(mailOptions);
 
     await sendToTelegram(message);
 

@@ -340,6 +340,14 @@ export default function CheckoutPage() {
         status: "pending",
       };
 
+      // const response = await fetch("/api/orders", {
+      //   method: "POST",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+      //   body: JSON.stringify(orderData),
+      // }); // ЭТО РАСКОМЕНТИТЬ ДЛЯ ТЕСТОВ, ЧТОБЫ МИНОВАТЬ ОПЛАТУ А СРАЗУ ПЕРЕЙТИ К ЗАЯВКЕ
+
       const response = await fetch("/api/payment/create", {
         method: "POST",
         headers: {
