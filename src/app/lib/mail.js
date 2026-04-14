@@ -66,7 +66,7 @@ ${deliveryInfo}
           from: `"Bove-brand" <sersur42@yandex.ru>`, // ОБЯЗАТЕЛЬНО ваш адрес Яндекса
           to: to,
           subject: `Заявка с сайта Bove-brand`,
-          html: message.replace(/\n/g, '<br>'), // Чтобы HTML из Telegram корректно отобразился в почте
+          html: msg.replace(/\n/g, '<br>'), // Чтобы HTML из Telegram корректно отобразился в почте
         };
         await transporter.sendMail(mailOptions);
 
