@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getOrder, updateOrder, deleteOrder } from "@/app/lib/orderStore";
 import { sendToTelegram } from "@/app/lib/telegram";
+import { sendToMail } from "@/app/lib/mail";
 
 export async function GET(req) {
   try {
@@ -47,6 +48,7 @@ export async function GET(req) {
 
     updateOrder(orderId, { status: "paid" });
 
+    await sendToMail(order, orderId);
     await sendToTelegram(order, orderId);
     deleteOrder(orderId);
 
