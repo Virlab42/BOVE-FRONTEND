@@ -80,3 +80,66 @@ ${deliveryInfo}
     return false; // Возвращаем false, но не пробрасываем ошибку
   }
 }
+
+export async function sendToVK(orderData, orderId) {
+  try {
+    const token = process.env.VK_BOT_TOKEN;
+    const peer_id = process.env.VK_CHAT_PEER_ID;
+
+    if (!token || !peer_id) {
+      console.error("🔴 ОШИБКА: Нет токена ВК или peer_id в файле .env");
+      return;
+    }
+
+    // Берем .title (как в телеграме), а если его нет - .name
+    const itemsList = orderData.items
+      .map(
+        (item, i) =>
+          `${i + 1}. ${item.title || item.name} ${item.color ? `(${item.color}, ${item.size})` : ""} (x${item.quantity}) — ${item.price * item.quantity} ₽`,
+      )
+      .join("\n");
+
+    const message = `
+✅ ЗАКАЗ ОПЛАЧЕН!
+
+Номер: ${orderId}
+👤 Клиент: ${orderData.customer.name || "не указано"}
+📞 Телефон: ${orderData.customer.phone || "не указан"}
+✉️ Email: ${orderData.customer.email || "не указан"}
+
+📦 Способ доставки: ${orderData.delivery?.description || "Не выбрана"}
+📍 Адрес: ${orderData.delivery?.address || "Не указан"}
+
+🛒 ТОВАРЫ:
+${itemsList}
+
+💰 Сумма товаров: ${orderData.subtotal} ₽
+🚚 Доставка: ${orderData.delivery?.cost || 0} ₽
+🔥 ИТОГО ОПЛАЧЕНО: ${orderData.total} ₽
+    `.trim();
+
+    const vkParams = new URLSearchParams({
+      peer_id: peer_id,
+      message: message,
+      random_id: Date.now().toString(),
+      access_token: token,
+      v: "5.199",
+    });
+
+    const res = await fetch(`https://api.vk.com/method/messages.send`, {
+      method: "POST",
+      body: vkParams,
+    });
+
+    const vkJson = await res.json();
+    if (vkJson.error) {
+      console.error("🔴 Ошибка от API ВК:", vkJson.error);
+    } else {
+      console.log(
+        `🟢 Уведомление в ВК по заказу ${orderId} успешно отправлено!`,
+      );
+    }
+  } catch (err) {
+    console.error("🔴 Ошибка отправки в ВК:", err);
+  }
+}
