@@ -15,8 +15,8 @@ export async function POST(req) {
 
     // Отправляем в Telegram (НЕ ждем завершения, чтобы не задерживать ответ)
     //sendToTelegram(order, orderId).catch((err) => {
-       //console.error("❌ Ошибка отправки в Telegram (фоновая):", err);
-     //});
+    //console.error("❌ Ошибка отправки в Telegram (фоновая):", err);
+    //});
 
     // Формируем payload для банка
     const payload = new URLSearchParams({
@@ -43,6 +43,9 @@ export async function POST(req) {
       console.error("Ошибка банка:", bankJson);
       return NextResponse.json({ success: false, message: "Ошибка у банка" });
     }
+
+    order.bankOrderId = bankJson.orderId;
+    saveOrder(orderId, order);
 
     // Возвращаем клиенту ссылку на форму оплаты
     return NextResponse.json({

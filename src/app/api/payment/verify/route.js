@@ -28,7 +28,7 @@ export async function POST(req) {
     // 2. ИДЕМ В АЛЬФА-БАНК
     const payload = new URLSearchParams({
       token: process.env.ALFA_PAYMENT_TOKEN,
-      orderNumber: orderId,
+      orderId: orderData.bankOrderId,
     });
 
     console.log("🔵 [VERIFY] Делаем запрос к Альфе...");
