@@ -11,25 +11,24 @@ export async function sendToTelegram(order, orderId) {
     }
 
     // Формируем список товаров с проверкой наличия полей
-    const itemsList =
-      order.items
-    .map(
-      (i) =>
-        `${i.title} ${i.color} ${i.size} × ${i.quantity} = ${
-          i.price * i.quantity
-        } ₽`
-    )
-    .join("\n");
+    const itemsList = order.items
+      .map(
+        (i) =>
+          `${i.title} ${i.color} ${i.size} × ${i.quantity} = ${
+            i.price * i.quantity
+          } ₽`,
+      )
+      .join("\n");
 
     // Информация о доставке (с проверкой наличия)
     let deliveryInfo = "Доставка не выбрана";
     if (order.delivery && order.delivery.method) {
-       if (order.delivery.method === "moscowCourier") {
-         deliveryInfo = `Курьерская доставка по Москве\nАдрес: ${order.delivery.address || "не указан"}`;
-       } else if (order.delivery.method === "cdek") {
-         deliveryInfo = `Доставка СДЭК\nПункт выдачи: ${order.delivery.address || "не выбран"}`;
-       }
-     }
+      if (order.delivery.method === "moscowCourier") {
+        deliveryInfo = `Курьерская доставка по Москве\nАдрес: ${order.delivery.address || "не указан"}`;
+      } else if (order.delivery.method === "cdek") {
+        deliveryInfo = `Доставка СДЭК\nПункт выдачи: ${order.delivery.address || "не выбран"}`;
+      }
+    }
 
     const msg = `
 ✅ <b>НОВЫЙ ЗАКАЗ #${orderId}</b>

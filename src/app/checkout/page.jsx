@@ -23,7 +23,8 @@ export default function CheckoutPage() {
   // Состояния для доставки (временно не используются, но оставлены для будущего восстановления)
   const [deliveryMethod, setDeliveryMethod] = useState("pickup");
   const [selectedPoint, setSelectedPoint] = useState(null);
-  const [moscowDeliveryOption, setMoscowDeliveryOption] = useState("withinMkad");
+  const [moscowDeliveryOption, setMoscowDeliveryOption] =
+    useState("withinMkad");
 
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState({});
@@ -41,7 +42,6 @@ export default function CheckoutPage() {
 
   console.log(cart);
 
-  
   // БЛОК РАСЧЕТА ДОСТАВКИ - ВРЕМЕННО ОТКЛЮЧЕН
   // Рассчитываем стоимость доставки ДЛЯ ОТОБРАЖЕНИЯ ИНФОРМАЦИИ
   const calculateDeliveryCostForDisplay = () => {
@@ -92,7 +92,6 @@ export default function CheckoutPage() {
 
   const deliveryCostForDisplay = calculateDeliveryCostForDisplay();
   const deliveryCostForPayment = calculateDeliveryCostForPayment();
-  
 
   const discountValue = promoCode ? Math.round((total * discount) / 100) : 0;
   const subtotal = total - discountValue;
@@ -154,13 +153,12 @@ export default function CheckoutPage() {
         if (value.length > 254) return "Email слишком длинный";
         return "";
 
-      
       // Валидация адреса - временно отключена
       case "address":
         if (!value.trim()) return "Введите адрес";
-        if (value.trim().length < 5) return "Адрес должен содержать минимум 5 символов";
+        if (value.trim().length < 5)
+          return "Адрес должен содержать минимум 5 символов";
         return "";
-      
 
       default:
         return "";
@@ -183,7 +181,6 @@ export default function CheckoutPage() {
     const emailError = validateField("email", formData.email);
     if (emailError) newErrors.email = emailError;
 
-    
     // Валидация доставки - временно отключена
     if (deliveryMethod === "cdek") {
       if (!selectedPoint) {
@@ -192,7 +189,6 @@ export default function CheckoutPage() {
     } else if (!formData.address.trim()) {
       newErrors.address = "Введите адрес";
     }
-    
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -235,7 +231,6 @@ export default function CheckoutPage() {
     }));
   };
 
-  
   // Обработчик выбора пункта СДЭК - временно отключен
   const handlePointSelect = (point) => {
     setSelectedPoint(point);
@@ -252,7 +247,6 @@ export default function CheckoutPage() {
       }));
     }
   };
-  
 
   /**
    * Отправка формы заказа
@@ -281,7 +275,6 @@ export default function CheckoutPage() {
     setIsLoading(true);
 
     try {
-      
       // БЛОК ФОРМИРОВАНИЯ ОПИСАНИЯ ДОСТАВКИ - ВРЕМЕННО ОТКЛЮЧЕН
       let deliveryDescription = "";
       if (deliveryMethod === "moscowCourier") {
@@ -307,7 +300,6 @@ export default function CheckoutPage() {
       } else if (deliveryMethod === "cdek") {
         deliveryDescription = "Доставка СДЭК";
       }
-      
 
       // Формируем данные заказа
       const orderData = {
@@ -316,18 +308,19 @@ export default function CheckoutPage() {
           phone: formData.phone,
           email: formData.email.trim().toLowerCase(),
         },
-        
+
         // БЛОК ДАННЫХ ДОСТАВКИ - ВРЕМЕННО ОТКЛЮЧЕН
         delivery: {
           method: deliveryMethod,
           point: deliveryMethod === "cdek" ? selectedPoint : null,
           address: formData.address,
           cost: 0, // Доставка бесплатная
-          option: deliveryMethod === "moscowCourier" ? moscowDeliveryOption : null,
+          option:
+            deliveryMethod === "moscowCourier" ? moscowDeliveryOption : null,
           description: deliveryDescription,
           details: "Доставка бесплатная",
         },
-        
+
         items: cart,
         subtotal: total,
         discount: {
@@ -479,7 +472,6 @@ export default function CheckoutPage() {
                   )}
                 </div>
 
-                
                 {/* <div className="form-group">
                   <input
                     type="text"
@@ -495,11 +487,9 @@ export default function CheckoutPage() {
                     <span className="error-text">{errors.address}</span>
                   )}
                 </div> */}
-                
               </div>
             </div>
 
-            
             <div className="form-section">
               <h2>Способ получения</h2>
 
@@ -524,7 +514,7 @@ export default function CheckoutPage() {
                       </span>
                     </div>
                   </div>
-                  
+
                   {deliveryMethod === "cdek" && (
                     <div className="widget-container">
                       <CDEKWidget onPointSelect={handlePointSelect} />
@@ -538,7 +528,12 @@ export default function CheckoutPage() {
                             </p>
                             {selectedPoint.price && (
                               <p>
-                                <strong>Бесплатная доставка осуществляется от 40 000Р, при заказе на меньшую сумму, стоимость доставки рассчитывается индивидуально исходя из адреса</strong>
+                                <strong>
+                                  Бесплатная доставка осуществляется от 40 000Р,
+                                  при заказе на меньшую сумму, стоимость
+                                  доставки рассчитывается индивидуально исходя
+                                  из адреса
+                                </strong>
                               </p>
                             )}
                           </div>
@@ -577,7 +572,7 @@ export default function CheckoutPage() {
                       </span>
                     </div>
                   </div>
-                  
+
                   {deliveryMethod === "moscowCourier" && (
                     <div className="moscow-delivery-options">
                       <div className="moscow-option">
@@ -665,7 +660,6 @@ export default function CheckoutPage() {
                 </label>
               </div>
             </div>
-            
 
             {/* БЛОК СОГЛАСИЯ */}
             <div className="form-group checkout-agreement">
@@ -749,8 +743,6 @@ export default function CheckoutPage() {
               </div>
             )}
 
-            
-            
             {deliveryMethod === "moscowCourier" && (
               <div className="total-row">
                 <span>Доставка:</span>
@@ -764,7 +756,6 @@ export default function CheckoutPage() {
                 <span>{deliveryCostForDisplay} ₽ (оплачивается отдельно)</span>
               </div>
             )}
-            
 
             <hr />
 
