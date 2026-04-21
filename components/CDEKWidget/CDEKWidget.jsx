@@ -20,7 +20,7 @@ export default function CDEKWidget({ onPointSelect }) {
           root: "cdek-widget",
           apiKey: "3134a676-b82e-4ad9-b210-e20c3dcf7772",
           defaultLocation: "Москва",
-          servicePath: "/api/cdek/service",
+          servicePath: "https://bove-brand.ru/api/cdek/service",
           type: "pvz",
 
           onChoose: (type, tariff, target) => {
