@@ -1,18 +1,6 @@
 /** @type {import('next').NextConfig} */
-
-// 1. Проверяем, запущено ли приложение в продакшене
-const isProd = process.env.NODE_ENV === "production";
-
 const nextConfig = {
-  // 2. Включаем префикс для всех статических файлов Next.js (JS, CSS, шрифты)
-  assetPrefix: isProd ? "https://cdn.bove-brand.ru" : undefined,
-
   images: {
-    // 3. Настройка для раздачи картинок из /public через CDN
-    loader: "akamai",
-    path: isProd ? "https://cdn.bove-brand.ru" : "",
-
-    formats: ["image/avif", "image/webp"],
     remotePatterns: [
       {
         protocol: "https",
@@ -26,12 +14,6 @@ const nextConfig = {
         port: "8000",
         pathname: "/**",
       },
-      // Добавляем домен CDN в разрешенные паттерны
-      {
-        protocol: "https",
-        hostname: "cdn.bove-brand.ru",
-        pathname: "/**",
-      },
     ],
   },
 
@@ -41,7 +23,7 @@ const nextConfig = {
     rsc: false,
   },
 
-  // 4. Заголовки безопасности
+  // 2. Заголовки безопасности
   async headers() {
     return [
       {
@@ -68,11 +50,6 @@ const nextConfig = {
             value:
               "camera=(), microphone=(), geolocation=(), interest-cohort=()",
           },
-          // ВАЖНО: Разрешаем CORS, чтобы шрифты и статика корректно загружались с CDN домена
-          {
-            key: "Access-Control-Allow-Origin",
-            value: "*",
-          },
         ],
       },
       {
@@ -87,15 +64,19 @@ const nextConfig = {
     ];
   },
 
+  // 3. Конфигурация безопасности сборки
   poweredByHeader: false,
   generateEtags: true,
 
+  // 4. Ограничение размеров загружаемых файлов
   serverRuntimeConfig: {
     maxRequestBodySize: "10mb",
   },
 
+  // 5. Включение сжатия
   compress: true,
 
+  // 6. Настройка перенаправлений для защиты
   async redirects() {
     return [
       {
@@ -106,6 +87,7 @@ const nextConfig = {
     ];
   },
 
+  // 7. CSP через Report-Only (настройте под свое приложение)
   async rewrites() {
     return {
       beforeFiles: [
