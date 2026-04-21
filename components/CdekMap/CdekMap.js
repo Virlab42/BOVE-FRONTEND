@@ -17,9 +17,9 @@ export default function CdekMap({ onSelect }) {
 
       window.ymaps.ready(async () => {
         const ym = window.ymaps;
-
+        4;
         // Получаем ПВЗ
-        const res = await fetch("/api/cdek/pvz");
+        const res = await fetch("https://bove-brand.ru/api/cdek/pvz");
         const pvzList = await res.json();
         console.log("ПВЗ:", pvzList);
 

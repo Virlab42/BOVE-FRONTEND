@@ -52,23 +52,25 @@ const nextConfig = {
             value: "nosniff",
           },
           {
+            // Поменяли DENY на SAMEORIGIN
             key: "X-Frame-Options",
-            value: "DENY",
+            value: "SAMEORIGIN",
           },
           {
             key: "X-XSS-Protection",
             value: "1; mode=block",
           },
           {
+            // Сделали чуть мягче для внешних API
             key: "Referrer-Policy",
-            value: "strict-origin-when-cross-origin",
+            value: "no-referrer-when-downgrade",
           },
           {
             key: "Permissions-Policy",
+            // Разрешили геолокацию
             value:
-              "camera=(), microphone=(), geolocation=(), interest-cohort=()",
+              "camera=(), microphone=(), geolocation=*, interest-cohort=()",
           },
-          // ВАЖНО: Разрешаем CORS, чтобы шрифты и статика корректно загружались с CDN домена
           {
             key: "Access-Control-Allow-Origin",
             value: "*",

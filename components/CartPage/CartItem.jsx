@@ -7,7 +7,7 @@ import Image from "next/image";
 
 export default function CartItem({ item, index }) {
   const { remove, updateQuantity } = useCart();
-  
+  const safeImageUrl = item.image?.replace("https:/api.", "https://api.") || "";
   console.log(item);
 
   const isOut = item.available === false; // ✅
@@ -18,7 +18,7 @@ export default function CartItem({ item, index }) {
     <div className="cart-item">
       <Link href={`${item.url}`} className="cart-item__image-link">
         <Image
-          src={`${item.image}`}
+          src={safeImageUrl}
           width={500}
           height={500}
           alt={item.title}
@@ -59,8 +59,8 @@ export default function CartItem({ item, index }) {
         ) : (
           <div className="cart-item__quantity">
             <button
-            className="cart-item__quantity-btn"
-            disabled={item.quantity == 1 ? true : false}
+              className="cart-item__quantity-btn"
+              disabled={item.quantity == 1 ? true : false}
               onClick={() =>
                 item.quantity > 1 && updateQuantity(index, item.quantity - 1)
               }
@@ -71,8 +71,10 @@ export default function CartItem({ item, index }) {
             <span>{item.quantity}</span>
 
             <button
-            className="cart-item__quantity-btn"
-              onClick={() => !isMaxed && updateQuantity(index, item.quantity + 1)}
+              className="cart-item__quantity-btn"
+              onClick={() =>
+                !isMaxed && updateQuantity(index, item.quantity + 1)
+              }
               disabled={isMaxed}
               title={isMaxed ? "Достигнут лимит по наличию" : ""}
             >
