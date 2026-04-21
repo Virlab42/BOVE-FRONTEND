@@ -9,8 +9,8 @@ const nextConfig = {
 
   images: {
     // 3. Настройка для раздачи картинок из /public через CDN
-    loader: "akamai",
-    path: "https://cdn.bove-brand.ru",
+    loader: "custom",
+    loaderFile: "./loader.js",
 
     formats: ["image/avif", "image/webp"],
     remotePatterns: [
