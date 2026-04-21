@@ -1,5 +1,5 @@
 /** @type {import('next').NextConfig} */
-
+console.log("!!! CONFIG LOADED WITH CDN PATH:", "https://cdn.bove-brand.ru");
 // 1. Проверяем, запущено ли приложение в продакшене
 const isProd = process.env.NODE_ENV === "production";
 
