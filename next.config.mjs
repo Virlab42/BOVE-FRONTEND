@@ -5,7 +5,7 @@ const isProd = process.env.NODE_ENV === "production";
 
 const nextConfig = {
   // 2. Включаем префикс для всех статических файлов Next.js (JS, CSS, шрифты)
-  assetPrefix: isProd ? "https://cdn.bove-brand.ru" : undefined,
+  assetPrefix: "https://cdn.bove-brand.ru",
 
   images: {
     // 3. Настройка для раздачи картинок из /public через CDN
